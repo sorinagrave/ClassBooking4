@@ -1,0 +1,124 @@
+﻿@model ClassBooking.ViewModels.ClassDetail
+
+@{
+    ViewBag.Title = "Create class";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Create gym class</h4>
+<span>&nbsp;</span>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.GymClassTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.GymClassTypeId,
+     new SelectList(Model.Types, "GymClassTypeId", "Name", Model.GymClassTypeId),
+     "-- select class type --",
+     new { @class = "form-control", onchange = "getClassTypeDefaults()", @id = "classTypeDropDown" })
+                @Html.ValidationMessageFor(model => model.GymClassTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class = "control-label col-md-2">Class Date (dd/mm/yyyy)</label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.ClassDate, new { @class = "form-control", @id = "txtClassDate" })
+                @Html.ValidationMessageFor(model => model.ClassDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Class Time (hh:mm)</label>
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.ClassTime, new {@id = "txtClassTime", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ClassTime, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Description, new { @class = "form-control", @id = "txtDescription" })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MaxCapacity, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.MaxCapacity, new { @class = "form-control", @id = "txtMaxCapacity" })
+                @Html.ValidationMessageFor(model => model.MaxCapacity, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MaxWaitList, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.MaxWaitList, new { @class = "form-control", @id = "txtMaxWaitList" })
+                @Html.ValidationMessageFor(model => model.MaxWaitList, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-danger" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-info" })
+</div>
+<script language="JavaScript">
+    function getClassTypeDefaults() {
+        jQuery.support.cors = true;
+        var id = $('#classTypeDropDown').val();
+        if (id > 0) {
+
+            var actionUrl = '@Url.Action("GymClassTypeDetails", "GymClassTypes")'
+
+            $.ajax({
+                type: "GET",
+                url: actionUrl,
+                dataType: "json",
+                data: { classTypeId: id },
+                success: displayClassTypeDefaults,
+                error: errorFunc
+            });
+        }
+    }
+    function displayClassTypeDefaults(response) {
+        if (response != null) {
+            $('#txtMaxCapacity').val(response.MaxCapacity);
+            $('#txtMaxWaitList').val(response.MaxWaitList);
+            $('#txtDescription').val(response.Description);
+            $('#txtClassTime').val(response.ClassTime);
+            var curDate = new Date();
+            var curDayOfTheWeek = curDate.getDay();
+            var daysToClass = response.DayOfTheWeek - curDayOfTheWeek;
+            if (daysToClass < 0) {
+                daysToClass += 7;
+            }    
+            curDate.setDate(curDate.getDate() + daysToClass);
+            var classDay = curDate.getDate();
+            var classMonth = curDate.getMonth() + 1;
+            var classYear = curDate.getFullYear();
+            $('#txtClassDate').val(pad(classDay) + "/" + pad(classMonth) + "/" + classYear)
+        }
+    }
+    function errorFunc(err) {
+
+    }
+    function pad(num) {
+        var s = num + "";
+        while (s.length < 2) s = "0" + s;
+        return s;
+    }
+</script>

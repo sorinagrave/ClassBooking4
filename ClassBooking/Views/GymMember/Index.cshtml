@@ -1,0 +1,59 @@
+﻿@using ClassBooking.Authorisation
+@model IEnumerable<ClassBooking.Models.GymMember>
+
+@{
+    ViewBag.Title = "Members";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="col-md-10">
+    <h4>Gym members</h4>
+    <span>&nbsp;</span>
+    @if (User.IsAdmin()) {
+        <p>
+            @Html.ActionLink("Add Member", "Create", null, new { @class = "btn btn-info" })
+        </p>
+    }
+    <table class="table table-striped">
+        <tr class="info">
+            <th>
+                @Html.DisplayNameFor(model => model.StaffId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmailAddress)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    <a href=@Url.Action("Details", new { id = item.GymMemberId })>
+                        @Html.DisplayFor(modelItem => item.StaffId)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmailAddress)
+                </td>
+                <td>
+                    @if (User.IsAdmin()) {
+                        @Html.ActionLink("Edit", "Edit", new { id = item.GymMemberId }, new { @class = "btn btn-info" })
+                        <a data-toggle="modal" data-target="#deleteModal" data-deleteid="@item.GymMemberId" data-displaytext="@item.FirstName" class="btn btn-danger">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+@Html.Partial("_DeleteConfirm")

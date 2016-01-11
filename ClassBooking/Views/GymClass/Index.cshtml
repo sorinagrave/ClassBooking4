@@ -1,0 +1,73 @@
+﻿@using ClassBooking.Authorisation
+@model IEnumerable<ClassBooking.ViewModels.ClassDetail>
+
+@{
+    ViewBag.Title = "Classes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="col-md-10">
+    <h4>Classes</h4>
+    <span>&nbsp;</span>
+    <p>
+        @if (User.IsAdmin()) {
+            @Html.ActionLink("Create New Class", "Create", "GymClass", null, new { @class = "btn btn-info" })
+            <span> </span>
+            @Html.ActionLink("Create Week Classes", "CreateWeekClasses", "GymClass", null, new { @class = "btn btn-info" })
+        }
+    </p>
+    <table class="table table-condensed">
+        <tr class="info">
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.GymClassTypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClassTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.nBookings)
+            </th>
+            <th></th>
+        </tr>
+        @{ string lastDate = "";}
+        @foreach (var item in Model) {
+            if (!item.ClassDate.Equals(lastDate)) {
+                <tr class="active">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClassDate)
+                    </td>
+                    <td colspan="5"></td>
+                </tr>
+            }
+            { lastDate = item.ClassDate; }
+            <tr>
+                <td></td>
+                <td>
+                    <a href="@Url.Action("Details", new { id=item.GymClassId })">
+                        @Html.DisplayFor(modelItem => item.GymClassTypeName)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClassTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nBookings)
+                </td>
+                <td>
+                    @if (User.IsAdmin()) {
+                        @Html.ActionLink("Edit", "Edit", new { id = item.GymClassId }, new { @class = "btn btn-info" })
+                        <a data-toggle="modal" data-target="#deleteModal" data-deleteid="@item.GymClassId" data-displaytext="@item.Description" class="btn btn-danger">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+@Html.Partial("_DeleteConfirm")

@@ -1,0 +1,2290 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Tex</name>
+    </assembly>
+    <members>
+        <member name="T:InternalTraceCore.Implementation.TraceCommandTypes">
+            <summary>
+            Trace Command Types - represent all of the possible command types that can be issued as a trace command.
+            </summary>
+        </member>
+        <member name="T:InternalTraceCore.Implementation.KnownCommand">
+            <summary>
+            Known Commands represent commands that can be sent directly to the viewer
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.KnownCommand.IncreaseIndent">
+            <summary>
+            Tell the viewer to increase the indent level on the following outputs
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.KnownCommand.DecreaseIndent">
+            <summary>
+            Tell the viewer to decrease the indent level on the following outputs
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.KnownCommand.PurgeAll">
+            <summary>
+            Tell the viewer to remove all curent trace data from its store
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.KnownCommand.PurgeCurrent">
+            <summary>
+            Tell the viewer to remove all current trace data for thsi current process from its store
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.KnownCommand.DoNotLeaveLine">
+            <summary>
+            Tell the viewer not to leave a line between this entry and the next entry.
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.KnownCommand.StartFilteringEvents">
+            <summary>
+            Tells the viewer to start ignoring all messages after this one
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.KnownCommand.StopFilteringEvents">
+            <summary>
+            Tells the viewer to stop ignoring all messages after this one
+            </summary>
+        </member>
+        <member name="T:InternalTraceCore.Implementation.TraceCommands">
+            <summary>
+            Trace commands represents further information about the trace commands themselvers
+            </summary>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCommands.TraceCommandToReadableString(InternalTraceCore.Implementation.TraceCommandTypes)">
+            <summary>
+            This will take the trace command enum and turn each of the valid entries into a readable string that is suitable
+            to be printed on the screen or displayed to the user.
+            </summary>
+            <param name="tct">The trace command types enum selected and valid value</param>
+            <returns>string representing that value</returns>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCommands.ReadableStringToTraceCommand(System.String)">
+            <summary>
+            This will take the trace command enum and turn each of the valid entries into a readable string that is suitable
+            to be printed on the screen or displayed to the user.
+            </summary>
+            <param name="tcstring">The trace command types enum selected and valid value</param>
+            <returns>string representing that value</returns>
+        </member>
+        <member name="T:InternalTraceCore.Implementation.Constants">
+            <summary>
+            Class holding all of the constants that are used by the trace program.
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.SECONDARYSTRINGSEPARATOR">
+            <summary>
+            When two messages are passed into a trace string they are separated like this for sending.
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.DEPTHPROTECTION">
+            <summary>
+            Loops that are based on recursion have depth protection enabled so that an assign innter to outer style
+            nastyness does not break.  The output will be very ugly but it will be better to a stackoverflow
+            excepiton, or nasty infinite looping thing.
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.EVIDENCENAMELENGTH">
+            <summary>
+            there is a limit to display text, this is most prevalant in evidence names which are built up from type names
+            and therefore can easily exceed the length that they are sposed to be at.  This just visciously truncates them
+            at that length.
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.EXCEPTIONENDTAG">
+            <summary>
+            Internal identifier to mark the end of an exception set of log messages
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.CMD_INCREASEINDENT">
+            <summary>
+            Command string to increase the indent of the viewer that is attached
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.CMD_DECREASEINDENT">
+            <summary>
+            Command string to decrease the indent of the viewer that is attached
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.CMD_DONTLEAVELINE">
+            <summary>
+            Command string to indicate to the viewer that no line should be left between this statement and the next
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.CMD_CAUSEPURGEINCURRENT">
+            <summary>
+            Command string for the viewer to indicate that a purge of the current process should be performed
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.CMD_CAUSEGLOBALPURGE">
+            <summary>
+            Command string for the viewer to indicate that a global purge should be performed
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.TRUNCATE_DATAENDMARKER">
+            <summary>
+            The truncate data end marker identifies where the end of the data that is associated with the truncation happens and therefore
+            where the start of the actual truncated data begins.  Immediately following the last # the data begins.
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.MESSAGETRUNCATE">
+            <summary>
+            The message truncate marker is placed at the start of truncation messages and at the end of messages that expect another message
+            to follow them containing truncate data.  This had to be more uniqued up as we search for it now that it is no longer able to be
+            used just as a start and the end of a string.  This is mostly used for pulling out the unqiue identifier that is used to join strings back
+            together in the viewer.
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.ODSLISTNER_NAME">
+            <summary>
+            The name of the specific Output debug string listener 
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.FILELISTNER_NAME">
+            <summary>
+             The name of the external text writer listener
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.DEFLISTNER_NAME">
+            <summary>
+            The name for the default listener
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.ORIGINALLISTENER_NAME">
+            <summary>
+            The name for the VS.Net 2003 default listener
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.Constants.NFI">
+            <summary>
+            The internal string used when no further infromation is available.
+            </summary>
+        </member>
+        <member name="T:InternalTraceCore.Implementation.MessageParts">
+            <summary>
+            Holds all of the parts that are used to create messages.
+            </summary>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.TraceMessageFormat.IS_VALID_TEXTSTRING_REGEX">
+            <summary>
+            This regex will match if the string that is tested against it is a fully qualified and valid Tex String, it will attempt to fail any non valid tex
+            strings.
+            </summary>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceMessageFormat.IsTexString(System.String)">
+            <summary>
+            This method will check the passed string to see if the string passed is not a tex string, it is optimised to fail as soon as possible therefore only guarantees
+            that the string passed does not look like a tex string
+            </summary>
+            <param name="theString">The string to verify whether its tex compatible or not</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceMessageFormat.ReturnPartsOfStringLegacy(System.String,System.String@,System.String@,System.String@,System.String@,System.String@,System.String@,System.String@)">
+            <summary>
+            This identifys the internal structure of the trace message.  The helper functions here
+            depend on this internal structure and are all kept here.  There should be no dependance
+            on the structure of the string outside of thsi class.
+            
+            {[MACHINENAME][PROCESSID][THREADID][MODULENAME][LINENUMBER][MOREDATA]}#CMD#TEXTOFDEBUGSTRING
+            
+            Where MACHINENAME = Current machine name taken from Environment
+            Where PROCESSID   = The PID assigned to the process that outputed the string
+            where THREADID    = The numeric ID assigned to the OS Thread running the commands
+            where MODULENAME  = The cs filename that was executing the commands
+            where LINENUMBER  = the numeric line number that the debug string was written from
+            NB Future enhancement 1 :
+                
+            </summary>     
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceMessageFormat.ReturnPartsOfString(System.String,System.String@,System.String@,System.String@,System.String@,System.String@,System.String@,System.String@,System.String@,System.String@)">
+            <summary>
+            This identifys the internal structure of the trace message.  The helper functions here
+            depend on this internal structure and are all kept here.  There should be no dependance
+            on the structure of the string outside of thsi class.
+            
+            {[MACHINENAME][PROCESSID][THREADID][NETTHREADID][MODULENAME][LINENUMBER][MOREDATA]}#CMD#TEXTOFDEBUGSTRING
+            
+            Where MACHINENAME = Current machine name taken from Environment
+            Where PROCESSID   = The PID assigned to the process that outputed the string
+            where THREADID    = The numeric ID assigned to the OS Thread running the commands
+            where NETTHREADID = The name of the .net thread running the command. 
+            where MODULENAME  = The cs filename that was executing the commands
+            where LINENUMBER  = the numeric line number that the debug string was written from
+            where MOREDATA    = this is additional location data, using the form Class::Method when called within Tex.
+            NB Future enhancement 1 :
+                
+            </summary>  
+        </member>
+        <member name="P:InternalTraceCore.Implementation.TraceCore.CustomTagReplacementHandler">
+            <summary>
+            This event allows a user to hook the trace stream and replace custom tags in the strings.  Tags normally
+            take the form %%TAGNAME%% and there are existing tags such as time strings.  Custom tags can be used but should be 
+            done so with care in order that trace data is not overwritten.
+            </summary>    
+        </member>
+        <member name="F:InternalTraceCore.Implementation.TraceCore.s_initialisationOccured">
+            <summary>
+            This is used to reduce the effect of calling initialise twice.  When initialise is called twice it can
+            reset the view in some viewers meaning that initialise cannot be called for ASP applications.  This will
+            prevent this from happening.  
+            </summary>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.PerformStaticInitialisation">
+            <summary>
+            This method is called before the initialise and performs static initialisation to make the behind the scenes intialisation work
+            it will attempt to read from the environment variable for configuration.     
+            </summary>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.TranslateTypeNamesToCSharp(System.String)">
+            <summary>
+            Helper function to convert system type names to their C# equivalents.  Used to format output to a c# style
+            although generally unnecessary can help flavour output.
+            </summary>
+            <param name="typeName">The .net typename of the variable to convert.</param>
+            <returns>The c# specific typename corresponding to the .net type</returns>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.IncludeThisMethodInOutput(System.Diagnostics.Switch,System.Diagnostics.TraceLevel)">
+            <summary><para>
+            Called within each trace method that takes a switch parameter to determine whether trace should be written.
+            </para></summary>>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.IncludeThisMethodInOutput(System.Diagnostics.TraceLevel)">
+            <summary><para>
+            Called within each trace method to determine whether or not the call should be included within the trace stream.  
+            </para></summary>>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.MessageRouter(System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            The message router handles all Trace messages internally and decides what to do with them.  Generally it adds
+            trace specific formatting information to the front of the message and then calls the debugging infrastructure
+            so that the trace handlers can make the correct calls.  Message router is a fairly heavy routine and should be
+            called by all trace routines that follow the standard debug only trace route.
+            <remarks>
+            The depth is 4 paramter is used when the message router call is 4 deep below the public interface of Tex, this is
+            the case for normal Tex.Method {  Tex.InternalMethod { Tex.MessageRotuer() } } } type approaches as the method that gets
+            the stack information itself is the fourth depth.  This is optimised so that the stack returns for this scenario
+            are quicker than if you pass false as the final parameter.  This parameter has no affect if addStackInfo is false.
+            </remarks>
+            </summary>
+            <param name="messageType">String representation of the type of message</param>
+            <param name="theMessage">Textual body of the message</param>
+            <param name="moreInfo">Indicates if this message is attached to a previous message</param>
+            <param name="addStackInfo">Indicates whether stack and line information should be included</param>    
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.QueryCurrentThreadInformation">
+            <summary>
+            The GetCurrentThreadInformation method will return a string with information about the currently executing thread
+            including the .net thread name, whether or not it is pooled and the underlying operating system thread id.
+            </summary>
+            <returns>String in the format Net Thread: NAME (pooled)||(notpooled) OS Thread: THREADID</returns>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalInitialiseThread(System.String,System.Threading.Thread)">
+            <summary>
+            ThreadInitialise internal method
+            </summary>
+            <param name="name">Name to set the thread to</param>
+            <param name="target">Thread to work on</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalLog(System.String,System.String)">
+            <summary>
+            InternalLog is the fundamental logging router.
+            </summary>
+            <param name="theMessage">The string to be logged</param>
+            <param name="secondary"> The secondary string to be logged</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalE(System.String)">
+            <summary>
+            The _E function is a method of orverriding the E default behaviour of specifying the method name as the
+            entry point to a block of code.  With _E you can specify a block name, however the corresponding _X function
+            should be used to indicate the end of the block with the same string passed.
+            This method is only present when the DEBUG contiditional is specified
+            </summary>
+            <param name="theMessage">The textual message to enter with</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalX(System.String)">
+            <summary>
+            The _X method is an override for the X function that allowes the specification of the name of the exit block
+            wtihout allowing it to look up the name of the method to identify the block.  This should only be used in
+            conjunction with the _E function.
+            This method is only present when the DEBUG contiditional is specified
+            </summary>
+            <param name="theMessage">The message to write</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalTimeCheckpoint(System.String,System.String,System.Boolean)">
+            <summary>
+            InternalTime checkpoint method handles timer start and stop requests
+            </summary>
+            <param name="timerTitle">The instance timer to be used</param>
+            <param name="timerSinkCategory">A generic category to total time for</param>
+            <param name="timerStart">Is this a start or stop timer</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalAssert(System.Boolean,System.String,System.String)">
+            <summary>
+            InternalAssert is the fundamental assertion router.
+            </summary>
+            <param name="blowUpIfFalse">If this is false the assertion is triggered</param>
+            <param name="message1">Primary context information for the assertion</param>
+            <param name="message2">Further details</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.CauseAssertionInternally(System.String,System.String)">
+            <summary>
+            Cause Assertion Internally causes an assertion to fail, from anywhere internal to tex, the
+            difference between this and the internal assert is both that it assumes that the assertion
+            has already failed and also that it does not assume to be one step from the public interface
+            in one of the performance fixes most methods were assumed to be one step off the public
+            interface to allow the stack count to skip back 4.
+            </summary>    
+            <param name="message1">The first message causing the assertion</param>
+            <param name="message2">A context message causing the assertion</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalDumpSysResources(System.String)">
+            <summary>
+            InternalDumpSysResources, is the fundamental point where the resources specified by the default sys
+            resources call are dumped out to the trace stream.
+            </summary>
+            <param name="context">A context message for the dump point - eg app start</param>    
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalDumpSecureString(System.Security.SecureString,System.String,System.String)">
+            <summary>
+            Dumps a secure string to the trace structure as a plaintext string.  This is usefull to see your secure
+            strings without causing them to be seen in release code.
+            </summary>
+            <remarks>BE CAREFULL, this could render your entire secure string thingamajig useless.</remarks>
+            <param name="ss">The secure string to dump</param>
+            <param name="message">The message representing the secure string</param>
+            <param name="secondaryMessage">More information relating to the dump</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalDumpArray(System.Array,System.String,System.Int32)">
+            <summary>
+            InternalDumpArray is the fundamental point where array dumping happens.  An array will have its contents
+            walked and those will be written out to the trace stream.
+            </summary>
+            <param name="arr">The array to be examined</param>
+            <param name="limitSearchTo">Stop dumping the array after this many results, if set to -1 the full array will be dumped</param>
+            <param name="message">A context message describing the dump</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalDumpEnumerable(System.Collections.IEnumerable,System.String)">
+            <summary>
+            InternalDumpEnumerable is called from the public facing dump methods to do the actual work.
+            </summary>
+            <param name="ien">Enumerable object</param>
+            <param name="message">Associated Context</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalDumpException(System.Exception,System.String,System.String)">
+            <summary>
+            InternalDumpException is called from the public facing dump exception methods to do the actual work.  It will
+            explore an exception object that is passed to it and dump it to the logging stream.
+            </summary>
+            <param name="ex">An exception to be dumped to the logging stream.</param>
+            <param name="message">A text description of the exception that is being explored</param>
+            <param name="message2">Any further associated information</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalDumpHashTable(System.Collections.Hashtable,System.String,System.String,System.Boolean)">
+            <summary>
+            InternalDumpHashtable is called to write a hashtable out to the debugging stream.  It can be used internally or is called
+            directly from the public facing DumpHashTable methods. If called internally then internalCall must be true as this will ensure
+            that all info is output with Constants.MOREINFO, and therefore form part of the calling methods output rather than
+            a log in its own right.
+            </summary>
+            <param name="ht">The hashtable that is to be written to the trace stream</param>
+            <param name="contextText">A context string describing the hash table</param>
+            <param name="internalCall">A boolean to flag if method is being called internall i.e. as part of another dump method</param>
+            <param name="secondaryMessage">Further contextual information</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalDumpStreamAsText(System.IO.Stream,System.Int64,System.Int32,System.String,System.String)">
+            <summary>
+            InternalDumpStreamAsText will read the start of a stream and write out the start to the trace stream assuming that
+            the input stream is in a text format that will be readable.  The position of the stream will be reset.
+            </summary>
+            <param name="stm">the stream to read</param>
+            <param name="startingPosition">The position within the stream from which to start dumping</param>
+            <param name="charsToDump">the number of characters to read</param>
+            <param name="context">A context description for the dump</param>
+            <param name="supportingInformation">Further contextual information</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalDumpStreamAsHex(System.IO.Stream,System.Int64,System.Int32,System.String,System.String)">
+            <summary>
+            InternalDumpStreamAsHex will read the start of a stream and write out the start to the trace stream assuming that
+            the input stream is in a binary format.  The stream will be written as a series of bytes which will be placed into
+            the trace stream as hex representations.  The position of the stream will be reset.
+            </summary>
+            <param name="stm">the stream to read</param>
+            <param name="startingPosition">The position within the stream from which to start dumping</param>
+            <param name="charsToDump">the number of characters to read</param>
+            <param name="context">Contextual information for the dump</param>
+            <param name="supportingInformation">Further contextual information</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.GetModuleBeforeTexTrace(System.String@)">
+            <summary>
+            This is a shortcut routine to calling the GetStackInfoBeforeTraceClass - as it will dummy out most of the returns
+            from this other function and only reutrn the line and filename.
+            </summary>
+            <param name="lineNumber">The line number that the code was executed on</param>
+            <returns>The module (filename) where the code was called from</returns>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.GetStackInfoBeforeTraceClass(System.String@,System.String@,System.String@,System.String@,System.String@,System.Boolean)">
+            <summary><para>
+            Several routines within the trace implementation require that the line and module and method information are
+            generated for the statement that they are on.  This routine generates a stack trace from its current location
+            then walks back up the trace until it finds the first stack frame that is not related to the trace library.  
+            this frame is the frame that the calling code was and this information is then returned in the ref parameters.</para>
+            </summary>
+            <param name="className">The classname where the code was called from</param>
+            <param name="methodName">The method name where the code was called from</param>
+            <param name="fileName">The filename containing the code where this was called from</param>
+            <param name="lineNumber">The line number that the calling line of code was on relative to the filename</param>
+            <param name="parameters">The parameter information</param>
+            <param name="getParameters">Determines whether or not extra work should be done to populate the parameters field.  If this is false parameters returns an empty string</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalVerboseLog(System.Object,System.String)">
+            <summary>
+            Internal verbose log is used to write messages out to the trace stream with the verbose indicator.
+            </summary>
+            <param name="theLog">The message that is to be written to the event stream</param>
+            <param name="moreInfo">Further information assocated with the message</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalWarnLog(System.String,System.String)">
+            <summary>
+            InternalWarnLog is used to write messages out to the trace stream with the verbose indicator.
+            </summary>
+            <param name="theLog">The message that is to be written to the event stream</param>
+            <param name="moreInfo">Further information assocated with the message</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalInitialise(System.String,System.String,System.Boolean)">
+            <summary>
+            Internal initialise is routed to from the public initialise methods, this is what actually does the work, queries machine and 
+            process information then sends this out to the stream.  If the parameter is true it will check the application configuraiton file
+            to see whether or not there are additional settings.  
+            </summary>
+            <remarks> If the EnvironmentPermission is held by the running application the initialise method will check the environment for the
+            TEXINIT environment variable to read a configuration string from this environment variable.</remarks>
+            <param name="preferredApplicationName">The friendly name used to describe the application.</param>
+            <param name="initialisationValue">Allows you to directly initialise using an initialisation string.</param>
+            <param name="allowReinit">Determines whether reinitialisation is allowed.</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.ApplyNonListenerInitialisationSettings(LBG.Insurance.Developer.Diagnostics.Settings)">
+            <summary>
+            Applys the settings which are not related to listeners such as the trace levels and stack information etc.
+            </summary>
+            <param name="tis"></param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalAddTCPListener(System.String,System.String)">
+            <summary>
+            Adds the TCP Listener to the Debug.Listeners collection using the specified initialisation data.
+            </summary>
+            <param name="initData">The initialisation string in the form Hostname,Port,INTERACTIVE</param>
+            <param name="name">The name of the listener to add</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the initialisation data is null</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when the initialisation data is 0 length.</exception>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.InternalAddTCPListener(System.String,System.String,System.Boolean,System.String)">
+            <summary>
+            Adds a new TCP listener to the Debug.Listeners collection using the parameters.
+            </summary>
+            <param name="hostName">The name of the machine on which Mex is listening.</param>
+            <param name="portNumber">The Port Number to listen on.</param>
+            <param name="interactive">Whether assertions should be presented in a window.</param>
+            <param name="name">The name of the listener instance.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when either port name or host name is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown when hostname or port number is specified with 0 length.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when the port number is not a valid number.</exception>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.ApplyInitialisationSettings(LBG.Insurance.Developer.Diagnostics.Settings)">
+            <summary>
+            The InitSettings class holds the initialisation request data after it has been collected from the
+            various sources.  
+            </summary>
+            <param name="tis">the structure representing the initialisation data</param>
+        </member>
+        <member name="F:InternalTraceCore.Implementation.TraceCore.dispatcherThread">
+            <summary>
+            Dedicated thread to dispatch the messages, have tried using the threadpool but because most of the listeners block it
+            just creates a lot of threads in the pool.
+            </summary>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.TraceCore.TriggerQueueWrite">
+            <summary>
+            Called to write out the messages that are queued.
+            </summary>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.InternalUtil.StackToString">
+            <summary>
+            Primarily an internal function used to generate a stack trace, although available on the public interface for more
+            general usage.  This function creates a stack from the current point in code and will remove all LPSTrace related 
+            functions from the resulting stack string.  Therefore the data captured is anything in the call stack from above the
+            T class related functions
+            </summary>
+            <returns>String containing the newly created stack information</returns>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.InternalUtil.WriteToEventLog(System.Diagnostics.EventLogEntryType,System.String,System.Int32)">
+            <summary>
+            Attempts to write an error into the application event log, this will try and create the source if the source can not be found
+            but any errors will be masked.  If for some reason we are unable to write to the event log then the exception is swallowed and
+            excecution continues.
+            </summary>
+            <param name="severity">The EvenntLogEntryType level of the message</param>
+            <param name="messsage">The message to write.</param>
+            <param name="number">The number of the error</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.InternalUtil.LogInternalError(InternalTraceCore.Implementation.InternalUtil.InternalErrorCodes,System.String)">
+            <summary>
+            Called to report an error within Tex, this will attempt to notify 
+            the user of an error, by writing to the event log or screen
+            </summary>
+            <param name="tie">InternalErrorCodes enum indicating the error</param>
+            <param name="param">An Additional parameter to describe the error more fully.</param>
+        </member>
+        <member name="M:InternalTraceCore.Implementation.InternalUtil.LogInternalError(InternalTraceCore.Implementation.InternalUtil.InternalErrorCodes,System.String,System.Diagnostics.TraceLevel)">
+            <summary>
+            Called to report an error, this will attempt to notify 
+            the user of an error, by writing to the event log or screen
+            </summary>
+            <param name="tie">InternalError enum indicating the error</param>
+            <param name="param">An Additional parameter to describe the error more fully.</param>
+            <param name="overrideLevel">Allows you to override the severity</param>
+        </member>
+        <member name="T:InternalTraceCore.Implementation.InternalUtil.InternalErrorCodes">
+            <summary>
+             Enum to describe the errors which can prevent tracing from working correctly.
+            </summary>
+        </member>
+        <member name="T:LBG.Insurance.Developer.Diagnostics.Settings">
+            <summary>
+            The settings class contains the settings that are used to control the way that the trace is written, this can be dynamically changed
+            or configured externally to the application through one of the initialisation routes.
+            </summary>
+        </member>
+        <member name="F:LBG.Insurance.Developer.Diagnostics.Settings.EnvironmentVariableName">
+            <summary>
+            The name of the system or user environment variable that is used to read configuration settings from. This environment variable
+            </summary>
+        </member>
+        <member name="F:LBG.Insurance.Developer.Diagnostics.Settings.AppConfigName">
+            <summary>
+            The name of the setting value within App Config which contains a settings configuration string.
+            </summary>
+        </member>
+        <member name="F:LBG.Insurance.Developer.Diagnostics.Settings.AppConfigBypass">
+            <summary>
+            The name of the application configuration setting which is used to determine whether static initialisation should be bypassed
+            to allow the application to control all of the initialisation.  Any value other than "False" will bypass the static configuration.
+            </summary>
+        </member>
+        <member name="F:LBG.Insurance.Developer.Diagnostics.Settings.InternalLoggingLevelName">
+            <summary>
+            The identifier used in the configuration file to determine what level should  be used for internal event log based logging.
+            </summary>
+        </member>
+        <member name="F:LBG.Insurance.Developer.Diagnostics.Settings.SwallowAllInitialisationFaults">
+            <summary>
+            If this is set to anything other than null then any exceptions during initialisation will be swallowed rather than thrown, it is not recommended
+            that this setting is set as it may swallow critical or security exceptions.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Settings.QueueMessages">
+            <summary>
+            Gets or Sets a value indicating whether messages are queued internally before being written to the trace.  This will almost entirely
+            eliminate the overhead of the listeners collection but will require additional memory and cpu resources to process the queue.
+            </summary>
+            <remarks>When used without a queue limit and with WriteOnFail set to false the behaviour is the same as V 2.x HighPerformanceMode.</remarks>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Settings.QueueDepthLimit">
+            <summary>
+            Gets or Sets a limit on the number of messages that are stored within the internal queue.  Messages above this limit are discarded and never written
+            to the trace stream.
+            </summary>
+            <remarks>When this is set to -1 (default) no messages are discarded</remarks>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Settings.WriteOnlyOnFail">
+            <summary>
+            Gets or Sets the mode where messages are only written to the trace when an error, or exception or a call to WriteStoredMessages is called.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Settings.EnableEnhancements">
+            <summary>
+            Gets or sets a value to determine whether the enhancements are supported such as allowing custom replacements to occur in the string
+            or embedding the timing information in strings.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Settings.ClearListenersOnStartup">
+            <summary>
+            Gets or Sets the Clear Listeners Property.  If this property is true the entire list of listeners is cleared before any specific listeners are added to the collection,
+            this is the only way to remove listeners with an initialisation
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Settings.AlternativeName">
+            <summary>
+            Gets or Sets the alternative name for the process which is running, this is passed in and allows an application to tell the viewer
+            to use an alternative, more descriptive name for the proces.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Settings.CurrentTraceLevel">
+            <summary>
+            Gets or Sets the default trace level.  This affects what level of output is sent to the trace streams.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Settings.ProcessName">
+            <summary>
+            Gets or Sets the process name.  Specifies the friendly name that descrives this process.  If this is not overriden then it is read from the executable
+            name of the application itself.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Settings.MachineName">
+            <summary>
+            Gets or Sets a machine name that is the hosting machine. This can be overriden and is only really used when combining
+            traces from multiple machines.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Settings.MainModule">
+            <summary>
+            Gets or Sets the name of the main module, allowing you to override the settings found during initialisation.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Settings.WindowTitle">
+            <summary>
+            Gets or Sets the value of the title of the window.  Overriding this replaces the text the window title from the windows API.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Settings.AddStackInformation">
+            <summary>
+             Gets or Sets an indicator to determine whether stack information should be added to each trace call. Stack informtion is slow to execute therefore disable
+             this if you are concerned about performance.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Settings.CreateString">
+            <summary>
+            Creates a settings configuration string. All of the configuration is stored and used in this way.
+            </summary>
+            <remarks>
+            The string format is [TLV:level][OPT:(opt1)(opt2)...][LST:(list1)(list2)...]
+            </remarks>
+            <returns>The string representing the options in this instance.</returns>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Settings.ListenersToAdd">
+            <summary>
+            Maintains a list of the listeners that are to be added, these should ideally be custom listeners
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Settings.AddListener(System.String)">
+            <summary>
+            Add a listener to the list of listeners that will be added on startup
+            </summary>
+            <param name="s">The string containing listener data</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Settings.ClearAddedListeners">
+            <summary>
+            Remove allqueued listeners from the list of listeners.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Settings.PopulateFromString(System.String)">
+            <summary>
+            Populates this InitSettings class with the values in the string which should be a well formed initialisation string
+            </summary>
+            <param name="initialisationData">The well formed initialisation string.</param>
+            <exception cref="T:System.ArgumentException">Thrown when the string was of an invalid format</exception>
+            <exception cref="T:System.InvalidOperationException">Thrown when an internal error occurs such as when the string changes type.</exception>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Settings.#ctor">
+            <summary>
+            This will create the settings class and then intialise it with default settings for high performance tracing
+            that is off in production.  The default settings are trace leve off, high performance on and no stack information
+            This method will also try to identify the main application and window names.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Settings.PopulateFromEnvironmentVariable">
+            <summary>
+            This will attempt to find the correct settings from the system environment variable.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Settings.PopulateFromAppConfigSetting">
+            <summary>
+            This will attempt to find the correct settings from the application configuration.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Settings.ToString">
+            <summary>
+            Returns the Settings as a stirng initialisation value.
+            </summary>
+            <returns>A string representing the initialisation settings.</returns>
+        </member>
+        <member name="T:LBG.Insurance.Developer.Diagnostics.AnEvidence">
+            <summary>
+            When the error dialog is created for the Error method the addittional information slots
+            are populated using instances of AnEvidence class.  Each evidence has a text name and 
+            a description.  The name should be kept short to be displayed on the form and the theText should
+            contain all of the required information separated frequently using newlines
+            </summary>
+        </member>
+        <member name="F:LBG.Insurance.Developer.Diagnostics.AnEvidence.TheName">
+            <summary>
+            The name of the piece of evidence.
+            </summary>
+        </member>
+        <member name="F:LBG.Insurance.Developer.Diagnostics.AnEvidence.TheText">
+            <summary>
+            The full description of the evidence itself
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.AnEvidence.ToString">
+            <summary>
+            To string returns the name of the evidence
+            </summary>
+            <returns>The displayable name of the evidence</returns>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.AnEvidence.#ctor(System.String,System.String)">
+            <summary>
+            Constructor override to supply the name and the evidence in one
+            </summary>
+            <param name="name">The name of the evidence that is to be supplied.  Cannot be null</param>
+            <param name="text">The full text of the evidence that is to be supplied.  If this is null the text null will be displayed</param>
+        </member>
+        <member name="T:LBG.Insurance.Developer.Diagnostics.AssertionPopulationData">
+            <summary>
+            This class holds all of the information that is required to populate the Assertion dialog correctly, and is used before an assertion is
+            displayed to the screen.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.AssertionPopulationData.ProcessName">
+            <summary>
+            A friendly name describing the process.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.AssertionPopulationData.ErrorText">
+            <summary>
+            The text associated with the assertion failure.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.AssertionPopulationData.Stacktrace">
+            <summary>
+            A detailed stack trace of the assertion location.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.AssertionPopulationData.MachineId">
+            <summary>
+            An identifier used to represent the machine
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.AssertionPopulationData.ProcessId">
+            <summary>
+            The numeric process ID
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.AssertionPopulationData.Threadid">
+            <summary>
+            The numeric identifier of the OS thread
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.AssertionPopulationData.NetThreadId">
+            <summary>
+            The numeric identifer of the .net thread
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.AssertionPopulationData.ModuleName">
+            <summary>
+             The name of the module
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.AssertionPopulationData.Morelocinfo">
+            <summary>
+            Further inforamtion describing the location
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.AssertionPopulationData.Line">
+            <summary>
+            The line number
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.BaseListener.Interactive">
+            <summary>
+            This is the request from the user to determine whether the listener should operate in an interactive way, however it is not the only
+            way of determining if its interactive.  Therefore even if the user says run interactivly but the operating system indicates that
+            the process is not interactive then the listener will not operate interactivly.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.BaseListener.ReallyInteractive">
+            <summary>
+            This determines whether or not the process really operates interactivly.  This is a combination of the users request for the listener
+            to work interactivly and whether or not the operating system states that the process is interactive.  A non interactive process will
+            never run interactivly no matter what the user requests.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.BaseListener.GetListenerName">
+            <summary>
+            Provide a decent name for the listener.
+            </summary>
+            <returns>The name that describes the listener</returns>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.BaseListener.AdditionalDiagnosticInfo">
+            <summary>
+            Returns additional diagnostic info to help diagnose why the listener itself may not be working - e.g. cache settings etc.
+            </summary>
+            <returns>A string with additional, listener specific, diagnostic info</returns>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.BaseListener.Fail(System.String)">
+            <summary>
+            Override for an assertion failure
+            </summary>
+            <param name="message">The messsage that is to be written as an assertion</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.BaseListener.MakeManyStrings(System.String,System.Int32)">
+            <summary>
+            This will take a single long string and return it as a series of truncated strings with the length that is 
+            specified in theLength parameter used to do the chopping up.  There is nothing clever or special about this 
+            routine it does not break on words or aynthing like that.
+            </summary>
+            <param name="theLongString">The string that is to be chopped up into smaller strings</param>
+            <param name="theLength">The length at which the smaller strings are to be created</param>
+            <returns></returns>
+        </member>
+        <member name="T:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo">
+            <summary>
+            A class representing diagnostics for the machine
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.ComputerName">
+            <summary>
+            Queries the system for the diagnostic data then returns the computer name
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.MachineName">
+            <summary>
+            Queries the system for the diagnostic data then returns the machine name
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.SystemPath">
+            <summary>
+            Queries the system for the diagnostic data then returns the system path
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.CurrentDirectory">
+            <summary>
+            Queries the system for the diagnostic data then returns the current directory
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.WorkingSet">
+            <summary>
+            Queries the system for the diagnostic data then returns the workingset
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.DebugOperatingSystemValue">
+            <summary>
+            Queries the system for the diagnostic data then returns data about whether the os is debug
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.OperatingSystemName">
+            <summary>
+            Queries the system for the diagnostic data then returns the os name
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.IsNetworked">
+            <summary>
+            Queries the system for the diagnostic data then returns whether the system is networked
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.IsSecurityEnabled">
+            <summary>
+            Queries the system for the diagnostic data then returns whether security is enabled
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.Locale">
+            <summary>
+            Queries the system for the diagnostic data then returns the locale
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.UserName">
+            <summary>
+            Queries the system for the diagnostic data then returns the username
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.Domain">
+            <summary>
+            Queries the system for the diagnostic data then returns the domain
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.PrimaryDisplay">
+            <summary>
+            Queries the system for the diagnostic data then returns metrics related to the primary display.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.MonitorCount">
+            <summary>
+            Queries the system for the diagnostic data. then returns the number of monitors
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.GetData">
+            <summary>
+            Queries the system for the diagnostic data.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.DiagnosticInfo.DisplayDiagnosticInfo">
+            <summary>
+            Displays a form containing the diagnostic info
+            </summary>
+        </member>
+        <member name="T:LBG.Insurance.Developer.Diagnostics.Listeners.frmListenerErrorDialog">
+            <summary>
+            Summary description for DefaultListenerErrorDialog.
+            </summary>
+        </member>
+        <member name="F:LBG.Insurance.Developer.Diagnostics.Listeners.frmListenerErrorDialog.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.frmListenerErrorDialog.RenderErrorDialog(LBG.Insurance.Developer.Diagnostics.Listeners.ErrorDialogData,System.Boolean)">
+            <summary>
+            Render the error message box in the context of Mex, ie outside of the application where the error occured.
+            </summary>
+            <param name="edd">All of the details required</param>
+            <param name="inline">Set to true if the error is being rendered inline with the application that has faulted.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.frmListenerErrorDialog.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.frmListenerErrorDialog.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.frmListenerErrorDialog.MexRenderErrorDialog">
+            <summary>
+            Display the error dialog outside the context of an error such as when Mex redisplays an error.
+            </summary>
+        </member>
+        <member name="T:LBG.Insurance.Developer.Diagnostics.Listeners.ErrorDialogData">
+            <summary>
+            Contains all of the data that is required to intialise and display the error dialog that is used by the Default listener.  
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Listeners.ErrorDialogData.ErrorMessage">
+            <summary>
+            The main error message that is to be displayed in the eror dialog.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.ErrorDialogData.AddEvidence(System.String,System.String)">
+            <summary>
+            Adds an evidence piece of information which is displayed in the error dialog.
+            </summary>
+            <param name="name">The name of the piece of evidence</param>
+            <param name="value">The value of the piece of evidence</param>
+        </member>
+        <member name="T:LBG.Insurance.Developer.Diagnostics.Listeners.frmInteractiveAssertionDialog">
+            <summary>
+            Creates an assertion dialog with some advanced behaviours, this dialog can either be shown directly by an application requiring
+            an assertion dialog or more commonly via the Tex class which will use the static renderassertiondialog method.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.frmInteractiveAssertionDialog.#ctor">
+            <summary>
+            Crates an assertion dialog and does some basic initialisation.  This is where the check for the AssertionExpansions environment
+            variable occurs, if this is found and set to true the dialog will start in expanded mode, otherwise it will start in 
+            user mode.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.frmInteractiveAssertionDialog.#ctor(System.String,System.String)">
+            <summary>
+            Initilaise the assertion dialog from a Tex string and further information, this is the most common usage
+            scenario therefore the constructor takes these two pieces of informationj.
+            </summary>
+            <param name="texWellFormedMessage">A well formed tex assertion string</param>
+            <param name="furtherDetails">More information relating to the assertion</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.frmInteractiveAssertionDialog.MexRenderAssertionDialog(LBG.Insurance.Developer.Diagnostics.AssertionPopulationData)">
+            <summary>
+            Renders the assertion dialog outside the context of a failed assertion, this is implemented to redisplay the assertion
+            such as when Mex displays assertions.
+            </summary>
+            <param name="apd">The assertion population data structure containing all of the assertion information</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.frmInteractiveAssertionDialog.RenderAssertionDialog(System.String,System.String)">
+            <summary>
+            RenderAssertionDialog is the preferred method of calling the assertion dialog from within a trace listener as it will handle
+            the output of the dialog correctly, ensuring that the dialogResult is processed in accordance with the expectatinos of the dialog.
+            This method takes a well formed tex string and further informationa s parameters which it will parse and then display within the
+            assertion dialog box.  It will also walk the stack from this point backwards to find a stack location for the dialog operation.
+            </summary>
+            <param name="wellFormedTexMessage">The tex string that caused the failure.</param>
+            <param name="furtherInformation">Any secondary informatino relating to the failure</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.frmInteractiveAssertionDialog.CreateStringAssertionRepresentation(System.Boolean)">
+            <summary>
+            Packages up the entire assertion dialog as a string so that it can be sent via a trace stream
+            and recreated elsewhere.  This allows interactive assertions to pop up on a box thats not running
+            the code if desired!
+            </summary>
+            <param name="forDisplay">If this is true the string is a friendly display stirng (for copy / paste) if false its a formatted string that this dialog can understand</param>
+            <returns>A string represetnign the assertion dialog in its entirity.</returns>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.frmInteractiveAssertionDialog.CreateStringAssertionRepresentation(System.Boolean,System.String,System.String)">
+            <summary>
+            Static versio of CreatestrnigAssertionRepresentation to create the representation of the assertion dialog without creating the dialog
+            </summary>
+            <param name="forDisplay">IF true display friendly text is return, otherwise packed text is returned</param>
+            <param name="texMessage">The message that is to be used to popualte the assertion</param>
+            <param name="detailMessage">Further details with the assertion</param>
+            <returns>A string representing the assertion dialog</returns>
+        </member>
+        <member name="F:LBG.Insurance.Developer.Diagnostics.Listeners.frmInteractiveAssertionDialog.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.frmInteractiveAssertionDialog.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.frmInteractiveAssertionDialog.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:LBG.Insurance.Developer.Diagnostics.Listeners.TraceListenerUtilities">
+            <summary>
+            Static class that holds utilities that can be used by all of the different listeners.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.TraceListenerUtilities.StripTraceInfo(System.String)">
+            <summary>
+            The strings that are used by the listeners have special formatting information at the front
+            of them to indicate the process, thread and type of information that is held by the string.  This
+            method strips that information from the string.
+            </summary>
+            <param name="inward">Fully formed string containing trace specific data</param>
+            <returns>raw string alone - having the trace specific data removed</returns>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.TraceListenerUtilities.ReturnJustTraceInfo(System.String)">
+            <summary>
+            Utility method designed for use by others to remove the padding data that is prepended on all of the messages
+            that Tex sends.  
+            </summary>
+            <param name="inward">A Fully formed tex string</param>
+            <returns>The part of the string that is the trace output</returns>
+        </member>
+        <member name="T:LBG.Insurance.Developer.Diagnostics.Listeners.OutputDebugStringListener">
+            <summary>
+            The default listener is designed to be used in conjunction with the trace viewer
+            and will output thread and process information along with the messages.  The listener
+            also allows for control messages and additional messages.
+            NB tested to be thread safe but not coded for. For full thread support use VS2003 TextWriterListener and import to mex later.
+            </summary>
+        </member>
+        <member name="F:LBG.Insurance.Developer.Diagnostics.Listeners.OutputDebugStringListener.MyName">
+            <summary>
+            The name of the default listener
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.OutputDebugStringListener.GetListenerName">
+            <summary>
+            Returns the name for the OutputDebugStringListener
+            </summary>
+            <returns>The name of the listener instance</returns>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.OutputDebugStringListener.AdditionalDiagnosticInfo">
+            <summary>
+            Returns additional diagnostic information.  For the output debug string listener there is noen.
+            </summary>
+            <returns>The string None</returns>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.OutputDebugStringListener.Fail(System.String,System.String)">
+            <summary>
+            override for an assertion failure with two parameters
+            </summary>
+            <param name="message">The message that is the assertion</param>
+            <param name="detailMessage"></param>        
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.OutputDebugStringListener.Write(System.String)">
+            <summary>
+            override for a write to the trace stream
+            </summary>
+            <param name="message">the message</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.OutputDebugStringListener.WriteLine(System.String)">
+            <summary>
+            override for a writeline to the trace strea,
+            </summary>
+            <param name="message">the message</param>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Listeners.OutputDebugStringListener.Name">
+            <summary>
+            override to retrieve the name of the trace listener
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.OutputDebugStringListener.#ctor">
+            <summary>
+            Listener to write content out to OutputDebugString
+            </summary>
+        </member>
+        <member name="T:LBG.Insurance.Developer.Diagnostics.Listeners.TCPListener">
+            <summary>
+            Listener that allows you to send trace messages across a network stream.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.TCPListener.#ctor">
+            <summary>
+            Default constructor
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.TCPListener.#ctor(System.String)">
+            <summary>
+            Constructor called when config driven
+            </summary>
+            <param name="initializationData">Config stored initialization string</param>
+            <exception cref="T:System.ArgumentException">Thrown when either the port or the tcp/ip address cant be worked out from the initialisation string</exception>
+            <exception cref="T:System.ArgumentNullException">Thrown when the initializatinData parmeter is null</exception>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.TCPListener.#ctor(System.String,System.Int32,System.Boolean)">
+            <summary>
+            Constructor used when calling programatically
+            </summary>
+            <param name="ipAddress">Server IP Address</param>
+            <param name="port">Server port</param>
+            <param name="interactive">Determines whether the TCP listener should show dialogs when it has failed assertions</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.TCPListener.Fail(System.String)">
+            <summary>
+            Console listener Fail overide.  Used to write assertion failures  
+            </summary>
+            <param name="message">Text of the string to describe the failure</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.TCPListener.Fail(System.String,System.String)">
+            <summary>
+            Console Listener fail override, two string parameters.  Used to write assertion failures
+            </summary>
+            <param name="message">The first string </param>
+            <param name="detailMessage">The more info string</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.TCPListener.Write(System.String)">
+            <summary>
+            Console listener override for the Write function to write a trace message over tcp/ip
+            </summary>
+            <param name="message">Text to be written</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.TCPListener.WriteLine(System.String)">
+            <summary>
+            Console listener override to write a trace message over tcp/ip
+            </summary>
+            <param name="message">Text to be written</param>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Listeners.TCPListener.IPAddress">
+            <summary>
+            Configured IP Address of server
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Listeners.TCPListener.Port">
+            <summary>
+            Configured Port number of server
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.TCPListener.initialize(System.String,System.Int32)">
+            <summary>
+            Initialise the listener setting and start the dispatcher thread
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.TCPListener.queueMessage(System.String)">
+            <summary>
+            Add output string to queue for processing 
+            </summary>
+            <param name="output">Trace output string</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.TCPListener.DispatcherThreadMethod">
+            <summary>
+            The TexTCP listeners main dispatcher thread which handles the sending of messages from the Tex component to the TCP stream.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Listeners.TCPListener.dispatchOutput(System.String)">
+            <summary>
+            Method responsible for actual writing of output to tcp stream
+            </summary>
+            <param name="output">Output string</param>
+        </member>
+        <member name="T:LBG.Insurance.Developer.Diagnostics.frmDiagnosticInfoForm">
+            <summary>
+            Displays a default diagnostic form in a dialog.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.frmDiagnosticInfoForm.#ctor">
+            <summary>
+            Creates the basic diagnostic form.
+            </summary>
+        </member>
+        <member name="F:LBG.Insurance.Developer.Diagnostics.frmDiagnosticInfoForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.frmDiagnosticInfoForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.frmDiagnosticInfoForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.NativeMethods.IsInteractiveUser">
+            <summary>
+            Returns true if the user has an interactive desktop, false if no interactive desktop is associated with the user
+            </summary>
+            <returns>Bool indicating whether there is an interactive desktop for this user</returns>    
+        </member>
+        <member name="T:LBG.Insurance.Developer.Diagnostics.Tex">
+            <summary>
+            This chunk includes alternative names for the Tex class, allowing a combination of backwards compatibility with previous
+            trace providers and compatbility with the expectations of .net naming.
+            Log functions --> Write / Writeln functions
+            E/X Methods --> Enter / Leave or  TraceIn / TraceOut
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.TraceIn">
+            <summary>
+            name override for Tex.E()
+            </summary>
+            <remarks><para>This method is dependant on the TRACE preprosessing identifier.</para></remarks>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.TraceIn(System.String)">
+            <summary>
+            name override, override, for Tex.E();
+            </summary>
+            <remarks><para>This method is dependant on the TRACE preprosessing identifier.</para></remarks>
+            <param name="theMessage">The name of the block being entered</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.TraceOut">
+            <summary>
+            Name Override, for Tex.X();
+            </summary>
+            <remarks><para>This method is dependant on the TRACE preprosessing identifier.</para></remarks>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.TraceOut(System.String)">
+            <summary>
+            Name override, for Tex.X()
+            </summary>
+            <remarks><para>This method is dependant on the TRACE preprosessing identifier.</para></remarks>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Write(System.Object)">
+            <summary><para>
+            The Write and WriteLine statements perform exactly the same basic logging functions as the Log methods.  Write and WriteLine 
+            are provided as a more .net friendly interface to the T class, while the Log functions provide backwards compatibility with
+            previous non .net versions of Tex trace.</para>
+            <para>In order to provide compatibility with the .net behaviour the Write method appends a special DONOTLEAVELINE constant
+            to the trace stream which should be respected by viewers and trace listeners.</para>
+            <para>If null is passed to this Log override then a special "null value passed to log" entry will be written to the stream</para>
+            </summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method has a Trace level of Info.</para>
+            </remarks>
+            <param name="theData">An object whos ToString method will be called to write data to the trace stream.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.WriteLine(System.Object)">
+            <summary><para>
+            The Write and WriteLine statements perform exactly the same basic logging functions as the Log methods.  Write and WriteLine 
+            are provided as a more .net friendly interface to the T class, while the Log functions provide backwards compatibility with
+            previous non .net versions of Tex trace.</para>
+            <para>In order to provide compatibility with the .net behaviour the Write method appends a special DONOTLEAVELINE constant
+            to the trace stream which should be respected by viewers and trace listeners.</para>
+            <para>If null is passed to this Log override then a special "null value passed to log" entry will be written to the stream</para>
+            </summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method has a Trace level of Info.</para>
+            </remarks>
+            <param name="theData">An object whos ToString method will be called to write data to the trace stream.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Assert(System.Boolean,System.String,System.String)">
+            <summary>
+            An assertion test method will cause an assertion failed trace to be written if the first parameter evaluates to
+            false.  The assertion failure will be reported to the trace listeners where the default Tex listener will provide
+            a message box to the user indicating the failure occured.
+            Assertions are only present in builds that use the DEBUG preprocessing identifier and therefore the behaviour of
+            an assertion should be closely checked to ensure it does not cause side effects in builds not specifying this identifier
+            </summary>
+            <remarks><para>This assertion uses a further parameter to identify the assertion to the user.  The second parameter
+            should be populated as fully as possible to provide context for the failed assertion</para>
+            <para>This method is dependant on the DEBUG preprosessing identifier.</para>    
+            </remarks>
+            <param name="failIfFalse">If this evaluates to false the assertion is triggered.</param>
+            <param name="message">The contenxt description for the assertion.  This will be displayed if the assertion is triggered</param>
+            <param name="moreInfo">Further details describing the context of the assetion.  This will be displayed if the assertion is triggered.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Assert(System.Boolean,System.String)">
+            <summary>
+            An assertion test method will cause an assertion failed trace to be written if the first parameter evaluates to
+            false.  The assertion failure will be reported to the trace listeners where the default Tex listener will provide
+            a message box to the user indicating the failure occured.
+            Assertions are only present in builds that use the DEBUG preprocessing identifier and therefore the behaviour of
+            an assertion should be closely checked to ensure it does not cause side effects in builds not specifying this identifier
+            </summary>
+            <remarks><para>This assertion uses a further parameter to identify the assertion to the user.  The second parameter
+            should be populated as fully as possible to provide context for the failed assertion</para>
+            <para>This method is dependant on the DEBUG preprosessing identifier.</para>    
+            </remarks>
+            <param name="failIfFalse">If this evaluates to false the assertion is triggered.</param>
+            <param name="message">The contenxt description for the assertion.  This will be displayed if the assertion is triggered</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Assert(System.Boolean)">
+            <summary>
+            An assertion test method will cause an assertion failed trace to be written if the first parameter evaluates to
+            false.  The assertion failure will be reported to the trace listeners where the default Tex listener will provide
+            a message box to the user indicating the failure occured.
+            Assertions are only present in builds that use the DEBUG preprocessing identifier and therefore the behaviour of
+            an assertion should be closely checked to ensure it does not cause side effects in builds not specifying this identifier
+            </summary>
+            <remarks><para>This Assertion overload provides no additional information and therefore will create a default message in
+            the assertion display.  This should therefore not be used.</para><para>
+            <para>This method is dependant on the DEBUG preprosessing identifier.</para>    
+            </para></remarks>
+            <param name="failIfFalse">If this evaluates to false the assertion is triggered.</param>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Tex.QueueMessages">
+            <summary>
+            Gets or Sets a value to determine whether messages are queued internally before being sent to the trace.  When messages are queued they are stored
+            internally before being sent to the trace listeners, this typically represents a much faster turn around time for the calling application but at 
+            the cost of additional memory and resources to manage the queue.
+            </summary>
+            <remarks><para>This property should not be set to alternative values in rapid succession as this would potentially lead to a build up of background
+            threads.</para><para>When used in conjunction with a QueueLimit other than -1 this setting can result in messages being lost from the trace</para></remarks>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Tex.CachePermissionCheckResults">
+            <summary>
+            Determines whether permissions are checked on each call or whether the results are cached and re-used.  If calls are being used
+            across different app domains with different permissions then the caching should be disabled.  When consistent permissions are
+            used then the cache should be enabled to reduce the effort required on each call.
+            </summary>
+            <remarks>Default value is true.</remarks>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Tex.CurrentTraceLevel">
+            <summary>
+            gets or Sets the current level for tracing - this will use the TraceLevel enum to determine which of the logging functions
+            will write data out.  The order of increasing data is off, error, warning, info, verbose.
+            </summary>
+            <exception cref="T:System.ArgumentException">Thrown if the trace level is set outside of the defined ranges.</exception>    
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Tex.EventLogLevel">
+            <summary>
+            Gets or Sets the current internal trace level.  This is what determines how much information is written to
+            the event log about what might be going wrong with the trace output.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.AddOutputDebugStringListener">
+            <summary>
+            Adds a listener listener into the Debug.Listeners collection which writes messages out using OutputDebugString and is designed
+            for use in development environments where the application to be traced and the recieving application are on the same box.
+            </summary>
+            <remarks>This method is dependant on the TRACE conditional</remarks>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.RemoveOutputDebugStringListener">
+            <summary>
+            Removes the listener which uses output debug string for its trace output from the debug listeners collection.
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Tex.AddStackInformation">
+            <summary>
+            Decide whether generically stack information is added to the strings that are written out to the trace listener streams
+            if this is set to false then most messages will not append stack information, which results in an increase in performance 
+            but with a cost of less information available.
+            </summary>
+            <remarks>This is the most significant performance overhead, if you are experiencing slow trace output set AddStackInformation to false
+            and place stack information into the strings themselves.</remarks>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Tex.EnableEnhancements">
+            <summary>
+            Decide whether to support the string enhancements - %%TS%% and %%CU%%.  These additional features allow time stamp
+            and custom callback operations during tracing. These features will not work if EnableEnhancements is set to false.
+            </summary>
+            <remarks>These features have a performance overhead therefore it is advisable to set this to false if they are not used.
+            EnableEnhancements defaults to false.
+            </remarks>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Tex.AddDetailedLocationInformation">
+            <summary>
+            Determines whether additional information is attached to the trace output.  This additional information contains data
+            relating to the thread and process that the trace is coming from as well as line and module information. This information
+            is specifically designed to be used by viewers to aid in displaying the messages in context.  
+            </summary>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Tex.WriteOnFail">
+            <summary>
+            Gets or sets a value to determine whether the trace messages are stored up prior to being written into the trace stream.
+            </summary>
+            <remarks>When WriteOnFail is true messages are stored internally up to QueueLimit messages.  When an exception is dumped or
+            an error is written to the trace then all of the queue is emptied into the trace, giving a history to this fault.</remarks>
+        </member>
+        <member name="P:LBG.Insurance.Developer.Diagnostics.Tex.QueueLimit">
+            <summary>
+            Gets or Sets a value to limit the amount of messages stored prior to being written to the trace.  Messages above this limt
+            are discarded and will never be traced.  When QueueMessages is set to false this limit has no effect.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.CreateCustomHook(LBG.Insurance.Developer.Diagnostics.TraceCustomEventHandler)">
+            <summary>
+            This event allows a user to hook the trace stream and replace custom tags in the strings.  Tags normally
+            take the form %%TAGNAME%% and there are existing tags such as time strings.  Custom tags can be used but should be 
+            done so with care in order that trace data is not overwritten.
+            </summary>    
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.InitialiseThread(System.String)">
+            <summary>
+            Thread initialise is used to provide thread specfic information to the trace stream and to set the name of the
+            thread for debugging purposes. 
+            </summary>
+            <remarks>ThreadInitialise can only be called once for any given thread as it sets the name of the thread for
+            debugging.  Any further calls to ThreadInitialise will cause an InvalidOperationException to be thrown
+            <para>This method is dependant on the DEBUG preprosessing identifier.</para></remarks>
+            <param name="name">the name that is to be applied to the current thread</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if ThreadInitialise is called more than once for a given thread.</exception>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.InitialiseThread(System.String,System.Threading.Thread)">
+            <summary>
+            Thread initialise is used to provide specific information to the trace stream and to set the name of the thread for debugging
+            purposes.  This overload takes a thread about which the initialisation is to occur.
+            </summary>
+            <remarks>Thread Initialise can only be called once for any given thread as it sets the name of the thread for debugging.  Further calls
+            to ThreadInitiliase will case an InvalidOperationException to eb thrown
+            <para>This method is dependant on the TRACE preprosessing identifier.</para></remarks>
+            <param name="name">The name that is to be applied to the thread</param>
+            <param name="threadToInitialise">The thread that is to be initialised</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if ThreadInitialise is called more than once for a given thread.</exception>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Initialise">
+            <overloads><para>
+            Initialise can be used to write out default information to the tracing stream.  The Initialise method is not required for tracing
+            but helps the viewers present more usefull debugging information.</para><para>
+            It is highly recommended that the Initialise method is called once for the lifetime of the application, before other trace information
+            has been written to the stream.  </para><para>  
+            The initialise method also allows the application to read configuration settings from the applications configuration file if they are
+            present.</para>  
+            </overloads>
+            <summary>The default initialise will send process information to the trace stream.</summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            </remarks>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Initialise(System.String,System.String)">
+            <overloads><para>
+            Initialise can be used to write out default information to the tracing stream.  The Initialise method is not required for tracing
+            but helps the viewers present more usefull debugging information.</para><para>
+            It is highly recommended that the Initialise method is called once for the lifetime of the application, before other trace information
+            has been written to the stream.  </para><para>  
+            The initialise method also allows the application to read configuration settings from the applications configuration file if they are
+            present. </para>
+            </overloads>
+            <summary>The default initialise will send process information to the trace stream.</summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            </remarks>
+            <param name="initialisationData">A string of well formed initialisation data to use for intialisation</param>
+            <param name="preferredApplicationName">A descriptive name for the application which Mex can use to replace the PID with.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Initialise(System.String)">
+            <overloads><para>
+            Initialise can be used to write out default information to the tracing stream.  The Initialise method is not required for tracing
+            but helps the viewers present more usefull debugging information.</para><para>
+            It is highly recommended that the Initialise method is called once for the lifetime of the application, before other trace information
+            has been written to the stream.  </para><para>  
+            The initialise method also allows the application to read configuration settings from the applications configuration file if they are
+            present.  </para>
+            </overloads>
+            <summary>The default initialise will send process information to the trace stream.</summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            </remarks>
+            <param name="preferredApplicationName">A descriptive name for the application, if this is used it tells Mex to replace the PID with this name.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.DumpStack(System.String)">
+            <summary>
+            This will write out the current call stack to the trace stream.
+            This method is only present when the TRACE contiditional is specified
+            </summary>
+            <remarks><para>This method is dependant on the TRACE preprosessing identifier.</para></remarks>
+            <param name="theMessage">An additional string to start the dump wtih.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.DumpFile(System.String,System.String)">
+            <summary>
+            This will wirte out a text file to the trace stream.
+            This method is only present when the TRACE conditional is specified.
+            </summary>
+            <remarks><para>This method is dependant on the TRACE preprossessing identifier</para></remarks>
+            <param name="fileName">The to open and dump</param>
+            <param name="contextMessage">A Context message describing the file</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.DumpFile(System.String,System.String,System.Int32)">
+            <summary>
+            This will wirte out a text file to the trace stream.
+            This method is only present when the TRACE conditional is specified.
+            </summary>
+            <remarks><para>This method is dependant on the TRACE preprossessing identifier</para></remarks>
+            <param name="fileName">The to open and dump</param>
+            <param name="contextMessage">A Context message describing the file</param>
+            <param name="lineDumpLimit">The maximum number of lines to write</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Dump(System.Object)">
+            <summary>
+            The Dump method dumps out details of obejcts to the trace stream.  It is designed to work with a variety of objects and will
+            therefore dump the internals of an object in an appropriate way.  Dump typically uses more info fields to display the contents
+            of objects.
+            </summary>
+            <param name="value">The object to be displayed in the trace stream.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Dump(System.Object,System.String)">
+            <summary>
+            Dumps an object into the trace stream, using a series of different approaches for displaying the object depending
+            on the type of the object that is dumped.  
+            </summary>
+            <param name="target">The object to be displayed in the trace stream</param>
+            <param name="context">A context string for the trace entry</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Dump(System.Object,System.String,System.String)">
+            <summary>
+            Dumps an object into the trace stream, using a series of different approaches for displaying the object depending
+            on the type of the object that is dumped.  
+            </summary>
+            <param name="target">The object to be displayed in the trace stream</param>
+            <param name="context">A context string for the trace entry</param>
+            <param name="secondaryMessage">A secondary message describing the dump</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Dump(System.IO.Stream,System.Int32,System.String)">
+            <summary>
+            Dumps a stream into the trace stream, using a series of different approaches for displaying the object depending
+            on the type of the object that is dumped.  
+            </summary>
+            <param name="target">The stream to write into the trace stream</param>
+            <param name="charsToDump">The number of characters to write from the stream</param>
+            <param name="context">A context string desciribng the dump entry</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Dump(System.IO.Stream,System.Int32,System.String,System.Boolean)">
+            <summary>
+            Dumps a stream into the trace stream, using a series of different approaches for displaying the object depending
+            on the type of the object that is dumped.  
+            </summary>
+            <param name="target">The stream to write into the trace stream</param>
+            <param name="charsToDump">The number of characters to write from the stream</param>
+            <param name="context">A context string desciribng the dump entry</param>
+            <param name="isText">Determines whether to write the characters as ascii data or binary data.  If true ascii data is assumed</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Dump(System.IO.Stream,System.Int32,System.String,System.Boolean,System.Int32,System.String)">
+            <summary>
+            Dumps a stream into the trace stream, using a series of different approaches for displaying the object depending
+            on the type of the object that is dumped.  
+            </summary>
+            <param name="target">The stream to write into the trace stream</param>
+            <param name="charsToDump">The number of characters to write from the stream</param>
+            <param name="context">A context string desciribng the dump entry</param>
+            <param name="initialPosition">A start position of the stream, the streams position is reset to its original location after the dump </param>
+            <param name="isText">Determines whether the data is to be assumed to be ascii or binary</param>
+            <param name="supportingInfo">A context string describing the stream dump</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.VerboseLog(System.Object)">
+            <summary>
+            Outputs data to the trace stream when the TraceLevel is Verbose.  This method should be used for additional
+            logging that is not displayed by default.
+            </summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprocessing identifier.</para>
+            <para>This method has a Trace level of Info.</para>
+            <para>The default trace level will not output messages from this method.  To make it visible set TraceLevel to Verbose</para>
+            </remarks>
+            <param name="theLog">The object to be written to the trace stream.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.VerboseLog(System.Diagnostics.Switch,System.Object)">
+            <summary>
+            Outputs data to the trace stream when the TraceLevel is Verbose.  This method should be used for additional
+            logging that is not displayed by default.
+            </summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method has a Trace level of Info.</para>
+            <para>The default trace level will not output messages from this method.  To make it visible set TraceLevel to Verbose</para>
+            </remarks>
+            <param name="theLog">The object to be written to the trace stream.</param>
+            <param name="switchController">The traceswitch to determine whether to log</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.VerboseLog(System.Diagnostics.Switch,System.String)">
+            <summary>
+            Outputs data to the trace stream when the TraceLevel is Verbose.  This method should be used for additional
+            logging that is not displayed by default.
+            </summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method has a Trace level of Info.</para>
+            <para>The default trace level will not output messages from this method.  To make it visible set TraceLevel to Verbose</para>
+            </remarks>
+            <param name="theLog">The object to be written to the trace stream.</param>
+            <param name="switchController">The traceswitch to determine whether to log</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.VerboseLog(System.Diagnostics.Switch,System.String,System.String)">
+            <summary>
+            Outputs data to the trace stream when the TraceLevel is Verbose.  This method should be used for additional
+            logging that is not displayed by default.
+            </summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method has a Trace level of Info.</para>
+            <para>The default trace level will not output messages from this method.  To make it visible set TraceLevel to Verbose</para>
+            </remarks>
+            <param name="theLog">The object to be written to the trace stream.</param>
+            <param name="switchController">The traceswitch to determine whether to log</param>
+            <param name="furtherInformation">Additional information to supply</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.VerboseLog(System.Object,System.String)">
+            <summary>
+            Outputs data to the trace stream when the TraceLevel is Verbose.  This method should be used for additional
+            logging that is not displayed by default.
+            </summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method has a Trace level of Info.</para>
+            <para>The default trace level will not output messages from this method.  To make it visible set TraceLevel to Verbose</para>
+            </remarks>
+            <param name="theLog">The object to be written to the trace stream.</param>
+            <param name="moreInfo">Any additional information that should be sent to the trace.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.LogIf(System.Boolean,System.Object,System.String)">
+            <summary>
+            <para>The LogIf method will only write its information to the stream if the first parameter evaluates to true.  This method
+            can be used in conjunction with trace switches or custom conditional code.</para>
+            </summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method has a Trace level of Info.</para>
+            </remarks>
+            <param name="writeLog">Boolean, if this is true the log is written to the trace output.</param>
+            <param name="theLog">The object that is to be logged.  This objects ToString() method will be called to write to the trace.</param>
+            <param name="furtherInfo">The additional information that is to be logged</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.LogIf(System.Boolean,System.Object)">
+            <summary>
+            <para>The LogIf method will only write its information to the stream if the first parameter evaluates to true.  This method
+            can be used in conjunction with trace switches or custom conditional code.</para>
+            </summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method has a Trace level of Info.</para>
+            </remarks>
+            <param name="writeLog">Boolean, if this is true the log is written to the trace output.</param>
+            <param name="theLog">The object that is to be logged.  This objects ToString() method will be called to write to the trace.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Log(System.Diagnostics.Switch,System.String,System.Object[])">
+            <summary>
+            Logs a message to the trace stream when the appropriate trace switch is used.  The trace will always arrive as a log
+            but the trace switch is used to determine whether it is written at all.
+            </summary>
+            <param name="logSwitch">The trace switch to determine whether to log</param>
+            <param name="theMessage">The message to log</param>
+            <param name="theRest">Secondary logging information</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Log(System.Diagnostics.Switch,System.String)">
+            <summary>
+            Logs a message to the trace stream when the appropriate trace switch is used.  The trace will always arrive as a log
+            but the trace switch is used to determine whether it is written at all.
+            </summary>
+            <param name="logSwitch">The trace switch to determine whether to log</param>
+            <param name="theMessage">The message to log</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.ErrorLog(System.String)">
+            <summary>
+            <para>The ErrorLog method will write a standard log message out to the trace output, if the trace level is Error or more.  There is no
+            difference between this and a standard log call, except for when the message is logged.</para>
+            </summary>
+            <remarks>This method is dependant on the TRACE conditional</remarks>
+            <param name="theMessage">The message that is to be logged</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.ErrorLog(System.Diagnostics.Switch,System.String)">
+            <summary>
+            <para>The ErrorLog method will write a standard log message out to the trace output, if the trace level is Error or more.  There is no
+            difference between this and a standard log call, except for when the message is logged.</para>
+            </summary>
+            <remarks>This method is dependant on the TRACE conditional</remarks>
+            <param name="theMessage">The message that is to be logged</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.ErrorLog(System.String,System.Object[])">
+            <summary>
+            <para>The ErrorLog method will write a standard log message out to the trace output, if the trace level is Error or more.  There is no
+            difference between this and a standard log call, except for when the message is logged.</para>
+            </summary>
+            <remarks>This method is dependant on the TRACE conditional</remarks>
+            <param name="theMessage">The message that is to be logged</param>
+            <param name="theRest">An additional params element of further parameters to write</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.ErrorLog(System.Diagnostics.Switch,System.String,System.Object[])">
+            <summary>
+            <para>The ErrorLog method will write a standard log message out to the trace output, if the trace level is Error or more.  There is no
+            difference between this and a standard log call, except for when the message is logged.</para>
+            </summary>
+            <remarks>This method is dependant on the TRACE conditional</remarks>
+            <param name="theMessage">The message that is to be logged</param>
+            <param name="theRest">An additional params element of further parameters to write</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.WarningLog(System.String)">
+            <summary>
+            <para>The LogWarning method will write a standard log message out to the trace output, if the trace level is set to Warning or more.
+            There is no difference between this and a standard log call, except for when the message is logged</para>
+            </summary>
+            <remarks>This method is dependant on the TRACE conditional</remarks>
+            <param name="theMessage">the message that is to be logged</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.WarningLog(System.Diagnostics.Switch,System.String,System.Object[])">
+            <summary>
+            <para>The LogWarning method will write a standard log message out to the trace output, if the trace level is set to Warning or more.
+            There is no difference between this and a standard log call, except for when the message is logged</para>
+            </summary>
+            <remarks>This method is dependant on the TRACE conditional</remarks>
+            <param name="activeSwitch">a boolean indicating whether the message should be logged</param>
+            <param name="theMessage">the message that is to be logged</param>
+            <param name="theRest">An additional params element to log more parameters to the stream</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.WarningLog(System.Diagnostics.Switch,System.String)">
+            <summary>
+            <para>The WarningLog method will write a standard log message out to the trace output, if the trace level is set to Warning or more.
+            There is no difference between this and a standard log call, except for when the message is logged</para>
+            </summary>
+            <remarks>This method is dependant on the TRACE conditional</remarks>
+            <param name="activeSwitch">The trace switch to apply to this message</param>
+            <param name="theMessage">the message that is to be logged</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.WarningLog(System.String,System.Object[])">
+            <summary>
+            <para>The WarningLog method will write a standard log message out to the trace output, if the trace level is set to Warning or more.
+            There is no difference between this and a standard log call, except for when the message is logged</para>
+            </summary>
+            <remarks>This method is dependant on the TRACE conditional</remarks>
+            <param name="theMessage">the message that is to be logged</param>
+            <param name="theRest">An additional params array of further information</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Log(System.String)">
+            <summary><para>
+            The Log function writes out a message to the trace listeners and is the default method of outputting information
+            to the trace.  The Log method output will show using the default trace settings but can be turned off by setting
+            the trace level to TraceLevel.Minimal.  A TraceLevel of TraceLeve.Info or higher will ensure the output is traced.
+            </para><para>If null is passed to the log a null was logged message will be output to the trace stream.</para>
+            </summary><remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method has a Trace level of Info.</para>
+            </remarks>
+            <param name="theMessage">The string that will be written to the trace stream.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Log(System.String,System.String)">
+            <summary><para>
+            The Log function writes out a message to the trace listeners and is the default method of outputting information
+            to the trace.  The Log method output will show using the default trace settings but can be turned off by setting
+            the trace level to TraceLevel.Minimal.  A TraceLevel of TraceLeve.Info or higher will ensure the output is traced.
+            </para><para>If null is passed to the log a null was logged message will be output to the trace stream.</para>
+            </summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method has a Trace level of Info.</para>
+            </remarks>
+            <param name="theMessage">A string that will be written out to the trace stream.</param>
+            <param name="moreInfo">A secondary message string written out to provide more context to the trace entry</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Log(System.Diagnostics.Switch,System.String,System.String)">
+            <summary><para>
+            The Log function writes out a message to the trace listeners and is the default method of outputting information
+            to the trace.  The Log method output will show using the default trace settings but can be turned off by setting
+            the trace level to TraceLevel.Minimal.  A TraceLevel of TraceLeve.Info or higher will ensure the output is traced.
+            </para><para>If null is passed to the log a null was logged message will be output to the trace stream.</para>
+            </summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method has a Trace level of Info.</para>
+            </remarks>
+            <param name="theMessage">A string that will be written out to the trace stream.</param>
+            <param name="moreInfo">A secondary message string written out to provide more context to the trace entry</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Log(System.String,System.Object[])">
+            <summary><para>
+            The Log function writes out a message to the trace listeners and is the default method of outputting information
+            to the trace.  The Log method output will show using the default trace settings but can be turned off by setting
+            the trace level to TraceLevel.Minimal.  A TraceLevel of TraceLeve.Info or higher will ensure the output is traced.
+            </para><para>If null is passed to the log a null was logged message will be output to the trace stream.</para>
+            </summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method has a Trace level of Info.</para>
+            </remarks>
+            <param name="format">A format string consistant with the string.format conventions.</param>
+            <param name="arg">params arguments to the format string</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Log(System.Object)">
+            <summary><para>
+            The Log function writes out a message to the trace listeners and is the default method of outputting information
+            to the trace.  The Log method output will show using the default trace settings but can be turned off by setting
+            the trace level to TraceLevel.Minimal.  A TraceLevel of TraceLeve.Info or higher will ensure the output is traced.
+            </para><para>If null is passed to the log a null was logged message will be output to the trace stream.</para>
+            </summary><remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method has a Trace level of Info.</para>
+            </remarks>
+            <param name="theData">An object whos ToString() method will be called to write data to the trace stream.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.FurtherInfo(System.String)">
+            <summary>
+            The further info method is designed to proivide more detailed information relating to the last message that was
+            written - listeners that are capable of handling further information will not write it out on the primary display
+            but will provide it as additional information to the main event.  It is importnat to note that the main event will
+            be the preceding message, no matter what the preceding message was.
+            </summary>
+            <remarks>The further information method is considerably faster to execute than that of the log method, therefore if
+            there is a requirement for logging within a loop it is often better to place a single log before the start of the loop
+            then use furtherinfo method calls within the loop.
+            <para>This method is dependant on the TRACE preprosessing identifier.</para></remarks>
+            <param name="theMessage">The data of the further information passed to the listener</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.FurtherInfo(System.Diagnostics.Switch,System.String)">
+            <summary>
+            The further info method is designed to proivide more detailed information relating to the last message that was
+            written - listeners that are capable of handling further information will not write it out on the primary display
+            but will provide it as additional information to the main event.  It is importnat to note that the main event will
+            be the preceding message, no matter what the preceding message was.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.InternalDiagnostic">
+            <summary>
+            Runs an internal diagnostic to present as much information about the internal status as possible.  This is essentially
+            used to try and work out why nothing is being sent to the trace stream.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.TraceQueuedEntries">
+            <summary>
+            When WriteOnFail is set to true the entirews will be queued until either this method is called, or an assertion fails or an
+            exception is dumped or an error triggered.
+            </summary>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Warning">
+            <summary>
+            The warning function is designed for non fatal warning messages to be written out to the log.  The warning method
+            is not dependant on a compiler directive and will not generate any visible output to the user but will write its statement
+            out to the trace handler.
+            </summary>
+            <remarks>The warning output will be written when the TraceLevel is warning or more detailed.</remarks>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Warning(System.String)">
+            <summary>
+            Override for the warning function.  This override will write a single warning message out to the trace log.
+            </summary>
+            <remarks>The warning output will be written when the TraceLevel is warning or more detailed.</remarks>
+            <param name="theMessage">The message to write out as a warning</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Warning(System.String,System.String)">
+            <summary>
+            Override for the warning function.  This override will write out two messages to the trace log as a single
+            entry.  The first is the warning message itself, while the second provides more detail about the cause
+            of the warning.
+            </summary>
+            <remarks>The warning output will be written when the TraceLevel is warning or more detailed.</remarks>
+            <param name="theMessage">A message to write out to the trace log descibing the warning.</param>
+            <param name="moreInformation">More details about why the warning occured.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Error(System.String,System.String,System.Exception,System.Boolean,System.Boolean)">
+            <summary>
+            The error function is not designed to perform fully functional error handling but will suffice as a rapid prototype
+            method of writing error data both to the user and to the trace log.  There are a series of parameters that determine
+            which of the outputs are chosen, although in all cases data is written to the trace log.
+            </summary>
+            <remarks>The Error output and any associated dialog will be written when the TraceLevel is set to Error. </remarks>
+            <param name="theMessage">The description of the error message</param>
+            <param name="moreInformation">Further details as to why the error occured.</param>
+            <param name="ex">The exception that caused the error to occur</param>
+            <param name="displayMessagebox">Bool determines whether or not a message box is presented to the user</param>
+            <param name="writeEventLogEntry">Bool determines whether or not data is written to the system event log</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Error(System.String,System.String)">
+            <summary>
+            Overide for the error function, taking an error message and further information.  This method will not display a dialog.
+            </summary>
+            <remarks>The Error output and any associated dialog will be written when the TraceLevel is set to Error. </remarks>
+            <param name="theMessage">The error message</param>
+            <param name="moreInformation">Additional information</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Error(System.String,System.Exception)">
+            <summary>
+            Override for the error function.  This will write an error level string out to the trace function and will not display a dialog.
+            </summary>
+            <remarks>The Error output and any associated dialog will be written when the TraceLevel is set to Error. </remarks>
+            <param name="theMessage">The text details of the error message</param>
+            <param name="ex">An exception that caused the error to occur</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Error(System.String,System.String,System.Exception)">
+            <summary>
+            Override for the error function.  This will write an error level string out to the trace function and will not display a dialog.
+            </summary>
+            <remarks>The Error output and any associated dialog will be written when the TraceLevel is set to Error. </remarks>
+            <remarks>The Error methods of Tex are aimed at prototyping applications only and do not represent robust application error handling. </remarks>
+            <param name="theMessage">The text description of the error</param>
+            <param name="moreInformation">Further text information relating to the error</param>
+            <param name="ex">An exception that caused the error to occur</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Error(System.String,System.String,System.Exception,System.Boolean)">
+            <summary>
+            Override for the error function.  This will write an error level string out to the trace function and will display a dialog if the
+            displayMessageBox paramter is set to true.
+            </summary>
+            <remarks>The Error output and any associated dialog will be written when the TraceLevel is set to Error. </remarks>
+            <remarks>The Error methods of Tex are aimed at prototyping applications only and do not represent robust application error handling. </remarks>
+            <param name="theMessage">The text description of the error</param>
+            <param name="moreInformation">Further text information relating to the error</param>
+            <param name="ex">An exception that caused the error to occur</param>
+            <param name="displayMessageBox">if true then a message box will be displayed on the screen</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Error(System.Exception)">
+            <summary>
+            An override for the Error function.  This will dump the offending exception out to the trace stream and will not display a dialog.
+            </summary>
+            <remarks>The Error output and any associated dialog will be written when the TraceLevel is set to Error. </remarks>
+            <remarks>The Error methods of Tex are aimed at prototyping applications only and do not represent robust application error handling. </remarks>
+            <param name="ex">The exception that caused the error to occur</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Error(System.String)">
+            <summary>
+            Override for error function.  This will write an error level string out to the trace stream and will not display a dialog.
+            </summary>
+            <remarks>The Error output and any associated dialog will be written when the TraceLevel is set to Error. </remarks>
+            <remarks>The Error methods of Tex are aimed at prototyping applications only and do not represent robust application error handling. </remarks>
+            <param name="theMessage">The error message</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Error(System.String,System.Boolean)">
+            <summary>
+            Override for error function.  This will write an error level string out to the trace stream and if the displayMessageBox parameter is set to
+            true then it will place a message on the screen.
+            </summary>
+            <remarks>The Error output and any associated dialog will be written when the TraceLevel is set to Error. </remarks>
+            <remarks>The Error methods of Tex are aimed at prototyping applications only and do not represent robust application error handling. </remarks>
+            <param name="theMessage">The error message</param>
+            <param name="displayMessageBox">If set to true a default dialog will be displayed</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.LogCurrentThreadInformation(System.String)">
+            <summary>
+            This will write some additional information about the current thread out to the trace stream.  This is the same information that is available to the caller
+            from the GetCurrentThreadInformation routine.
+            </summary>
+            <remarks><para>This method is dependant on the DEBUG preprosessing identifier.</para></remarks>
+            <param name="additionalInfo">An additional string that can be assocaited with the thread information</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.QueryMethodNameAboveMe">
+            <summary><para>
+            GetMethodNameAboveMe will return the Name of the method that is immediately above your method in the call stack.  This will
+            therefore be the full name of the method that called you. </para>
+            <para>
+            For Example:
+            Main  - Call Get method name here ... returns null
+              Method1  - Call Get method name here ... returns Main
+                Method2  - Call Get method name here ... returns Method1</para>
+            <remarks>If there are no methods above you in the call stack this method will return null</remarks>
+            </summary>
+            <returns>Returns the name of the method that called the method calling this method.  If no such method exists returns null.</returns>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.ResourceGrab(System.Object,System.String)">
+            <summary>
+            ResourceGrab overload that is specifically tailored at locks used for thread synchronisation.  The lock is passed as the first parameter
+            and the name of the lock as the second parameter so that a virtual count can be maintained representing the locking and unlocking that
+            is done on the object.
+            <para>Each call to ResourceGrab must be paired with a corresponding call to ResourceFree</para>
+            </summary>
+            <remarks><para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method will only write to the trace log when the trace level is Verbose.</para>
+            </remarks>
+            <param name="theLock">The object which is locked</param>
+            <param name="lockName">The name of the lock (either physically or logiclly)</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.ResourceFree(System.Object,System.String)">
+             <summary>
+             An Overload to the ResourceFree method specifically tailored for tracing lock operations.
+             <para>Each call to ResourceFree bust follow a call to ResourceGrab</para>
+             </summary>
+            <remarks><para>This method is dependant on the TRACE preprosessing identifier.</para>
+             <para>This method will only write to the trace log when the trace level is Verbose.</para>
+             </remarks>
+             <param name="theLock">The object which is locked</param>
+             <param name="lockName">The name of the lock</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.ResourceGrab(System.String,System.String)">
+            <summary>
+            The ResourceGrab method is used to indicate when a specific named resource has been allocated. The ResourceGrab method
+            should be used in conjunction with the ResourceFree method to trace allocating and freeing resources.
+            The resource identification and context identification is done using string matches therefore its very important that the names of resources and the
+            names of contexts match exactly.  The best practice method of using this tracing capability includes using constant strings in the code to represent
+            the names and contexts surrounding resource allocation and de allocation.
+            </summary>
+            <remarks><para>It is very important that Resource allocation traces are used carefully so that they are only called when the corresponding resources
+            are actually consumed or freed.  This can be difficult to do in some error handling scenarios</para><para>
+            </para>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method will only write to the trace log when the trace level is Verbose.</para>
+            </remarks>>
+            <param name="resourceName">The string identifier that represents the resource consumed, this must match exactly the identifier passed to resourceFree</param>
+            <param name="context">A context within which to grab the resource, used to pinpoint the location of the grab of a specific resource</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the resource name is null or has zero length</exception>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.ResourceFree(System.String,System.String)">
+            <summary>
+            ResourceFree is used to release a virtual count of a specific named resource.  This can be used in conjunction with ResourceGrab to track allocation
+            and deallocation of resources within a programs execution flow.
+            The resource identification and context identification is done using string matches therefore its very important that the names of resources and the
+            names of contexts match exactly.  The best practice method of using this tracing capability includes using constant strings in the code to represent
+            the names and contexts surrounding resource allocation and de allocation.
+            </summary>
+            <remarks><para>It is very important that Resource allocation traces are used carefully so that they are only called when the corresponding resources
+            are actually consumed or freed.  This can be difficult to do in some error handling scenarios</para><para>
+            </para>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method will only write to the trace log when the trace level is Verbose.</para>
+            </remarks>
+            <param name="resourceName">The string identifier that represents the resource consumed, this must match exactly the identifier passed to resourceFree</param>
+            <param name="context">A context within which to grab the resource, used to pinpoint the location of the grab of a specific resource</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the resource name is null, the resource name needs to be specified so that resources can be tracked by matching name</exception>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.ResourceGrab(System.String)">
+            <summary>
+            ResourceGrab is used to consume a virtual count of a specific named resource.  This can be used in conjunction with ResourceFree to track allocation
+            and deallocation of resources within a programs execution flow.
+            The resource identification and context identification is done using string matches therefore its very important that the names of resources and the
+            names of contexts match exactly.  The best practice method of using this tracing capability includes using constant strings in the code to represent
+            the names and contexts surrounding resource allocation and de allocation.
+            </summary>
+            <remarks><para>It is very important that Resource allocation traces are used carefully so that they are only called when the corresponding resources
+            are actually consumed or freed.  This can be difficult to do in some error handling scenarios</para><para>
+            </para>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method will only write to the trace log when the trace level is Verbose.</para>
+            </remarks>
+            <param name="resourceName">The string identifier that represents the resource consumed, this must match exactly the identifier passed to resourceFree</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the resourceName is null or has zero length</exception>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.ResourceFree(System.String)">
+            <summary>
+            ResourceFree is used to release a virtual count of a specific named resource.  This can be used in conjunction with ResourceGrab to track allocation
+            and deallocation of resources within a programs execution flow.
+            The resource identification and context identification is done using string matches therefore its very important that the names of resources and the
+            names of contexts match exactly.  The best practice method of using this tracing capability includes using constant strings in the code to represent
+            the names and contexts surrounding resource allocation and de allocation.
+            </summary>
+            <remarks><para>It is very important that Resource allocation traces are used carefully so that they are only called when the corresponding resources
+            are actually consumed or freed.  This can be difficult to do in some error handling scenarios</para><para>
+            </para>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method will only write to the trace log when the trace level is Verbose.</para>
+            </remarks>
+            <param name="resourceName">The string identifier that represents the resource consumed, this must match exactly the identifier passed to resourceFree</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the resource name is null or has zero length</exception>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.ResourceSysInfo(System.String)">
+            <summary>
+            ResourceSysInfo will take a snapshot of some system resources and write the current counts out to the trace log.  The
+            resources that are captured are current memory, GDI objects and user objects.  The snapshot that this method writes
+            is of no use on its own, the best practice approach to using this method is to call it several times during an applications
+            lifespan to track changes to the levels of the resources as the application progresses.
+            </summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method will only write to the trace log when the trace level is Verbose.</para>
+            </remarks>
+            <param name="context">A context string to describe the point in the application</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.EnterSection(System.String)">
+            <summary>
+            The enter section method marks a section of debugging code into a descreet block.  Sections are marked on a per
+            thread basis and can be used by viewers or by Tex to alter the trace output.
+            </summary>
+            <remarks><para>While it should be possible to disable output by section this is not implemented yet
+            either in Tex or in any of the shipped viewers , including mex.</para>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            </remarks>
+            <param name="sectionName">The friendly name of the secion</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.LeaveSection">
+            <summary>
+            The exit section method marks the termination of a section of code.  Section enter and exit blocks are used by viewers
+            to determine which parts of the code to view at once.
+            </summary>
+            <remarks>Disabling output per section not implemented yet
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            </remarks>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.E">
+            <summary>
+            The E function describes entry to a block of code or a function.  E will automatically record the name of the function
+            being entered although provides an override that uses a string if this should describe a block.
+            </summary>
+            <remarks><para>This method is dependant on the TRACE preprosessing identifier.</para></remarks>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.E(System.String)">
+            <summary>
+            The E override to provide a string will replace the automatically generated method name with the string that you
+            provide in the first parameter.
+            </summary>
+            <remarks><para>This method is dependant on the TRACE preprosessing identifier.</para></remarks>
+            <param name="theMessage">The name of the block being entered</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.X">
+            <summary>
+            The X override is the indicator for leaving a block that has been entered with E.
+            </summary>
+            <remarks><para>This method is dependant on the TRACE preprosessing identifier.</para></remarks>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.X(System.String)">
+            <summary>
+            The X override is the indicator for leaving a block that has been entered with E.
+            </summary>
+            <remarks><para>This method is dependant on the TRACE preprosessing identifier.</para></remarks>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.E(System.Diagnostics.Switch)">
+            <summary>
+            The E function describes entry to a block of code or a function.  E will automatically record the name of the function
+            being entered although provides an override that uses a string if this should describe a block.
+            </summary>
+            <remarks><para>This method is dependant on the TRACE preprosessing identifier.</para></remarks>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.X(System.Diagnostics.Switch)">
+            <summary>
+            The X override is the indicator for leaving a block that has been entered with E.
+            </summary>
+            <remarks><para>This method is dependant on the TRACE preprosessing identifier.</para></remarks>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Spike(System.String,System.String)">
+            <summary>
+            <para>Spikes are quick notes to indicate when code has been hit.  Typically they are used to identify performance overheads which occur when
+            a piece of code is executed repeatedly when it should not be.  For example you may expect a call to GetUsers to hit the repository call
+            GetUsers once, so you expect a spike value of 1.  If you see a spike of 3 you know that something is wrong.</para>
+            </summary>
+            <param name="spikeCategory">The category of this spike (e.g. Repository)</param>
+            <param name="spikeTitle">The name of this spike instance (e.g. GetUsers)</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Spike(System.String)">
+             <summary>
+             <para>Spikes are quick notes to indicate when code has been hit.  Typically they are used to identify performance overheads which occur when
+             a piece of code is executed repeatedly when it should not be.  For example you may expect a call to GetUsers to hit the repository call
+             GetUsers once, so you expect a spike value of 1.  If you see a spike of 3 you know that something is wrong.</para>
+             </summary>
+            <remarks>This overload will use the a default category.</remarks>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Spike">
+             <summary>
+             <para>Spikes are quick notes to indicate when code has been hit.  Typically they are used to identify performance overheads which occur when
+             a piece of code is executed repeatedly when it should not be.  For example you may expect a call to GetUsers to hit the repository call
+             GetUsers once, so you expect a spike value of 1.  If you see a spike of 3 you know that something is wrong.</para>
+             </summary>
+            <remarks>This overload will use the current source location as the name of the spike, using a default categorty</remarks>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.PreventSpike(System.String,System.String)">
+            <summary>
+            Spikes can be offset with PreventSpike, this will remove an instance where a known hit has occured to ensure that you can use spikes to track down erronious
+            data that is being called.  For example if you have an implementation which must call get user twice you can eliminate one of them by using a prevent spike to
+            ensure that onlyone hit is shown.
+            </summary>
+            <param name="spikeCategory">The category that the spike to be offset against is in. (Must match the spike category exactly)</param>
+            <param name="spikeTitle">The name of the spike that is to be offset against.  (Must match the spike name exactly)</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.PreventSpike(System.String)">
+            <summary>
+            Spikes can be offset with PreventSpike, this will remove an instance where a known hit has occured to ensure that you can use spikes to track down erronious
+            data that is being called.  For example if you have an implementation which must call get user twice you can eliminate one of them by using a prevent spike to
+            ensure that onlyone hit is shown.
+            </summary>
+            <remarks>This overload will use a default category</remarks>
+            <param name="spikeTitle">The name of the spike that is to be offset against.  (Must match the spike name exactly)</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.PreventSpike">
+            <summary>
+            Spikes can be offset with PreventSpike, this will remove an instance where a known hit has occured to ensure that you can use spikes to track down erronious
+            data that is being called.  For example if you have an implementation which must call get user twice you can eliminate one of them by using a prevent spike to
+            ensure that onlyone hit is shown.
+            </summary>
+            <remarks>This overload will use a default category, and derrive its name from the code location</remarks>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.Mark(System.String)">
+            <summary>
+            Places a marker into the trace stream to help viewers identify elements of code.
+            </summary>
+            <param name="location">The marker name.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.TimeStart(System.String)">
+            <summary>
+            <para> TimeStart is used for rudementary timing of sections of code.  Time start will write a time start identifier to the
+            trace stream and start an internal timer.  When TimeStop is called for the same timer title then the value of the elapsed
+            time is written to the trace stream.</para><para>
+            The TimeStart method relies on a unique timerTitle to be passed to it.  There can only be one active timerTitle of the same
+            name at any one time.  Each TimeStart(timerTitle) method call must be matched with a TimeStop(timerTitle) method call to ensure
+            that the timing information is writtten to the trace stream.  timerTitles are case sensitive and must be specified exactly.
+            </para><para>
+            This is not a highly effective or accurate profilling mechanism but will suffice for quick timings.
+            </para>
+            </summary>
+            <remarks>
+            <para>This method is dependant on the DEBUG preprosessing identifier.</para>
+            <para>This method has a Trace level of Verbose.</para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">Thrown when timerTitle is null or a zero length string.</exception>
+            <param name="timerTitle">The unique title for the timer that is being started.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.TimeStart(System.String,System.String)">
+            <summary>
+            <para> TimeStart is used for rudementary timing of sections of code.  Time start will write a time start identifier to the
+            trace stream and start an internal timer.  When TimeStop is called for the same timer title then the value of the elapsed
+            time is written to the trace stream.</para><para>
+            The TimeStart method relies on a unique timerTitle to be passed to it.  There can only be one active timerTitle of the same
+            name at any one time.  Each TimeStart(timerTitle) method call must be matched with a TimeStop(timerTitle) method call to ensure
+            that the timing information is writtten to the trace stream.  timerTitles are case sensitive and must be specified exactly.
+            </para><para>
+            This is not a highly effective or accurate profilling mechanism but will suffice for quick timings.
+            </para>
+            </summary>
+            <remarks>
+            <para>This method is dependant on the DEBUG preprosessing identifier.</para>
+            <para>This method has a Trace level of Verbose.</para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">Thrown when timerTitle is null or a zero length string.</exception>
+            <param name="timerTitle">The unique title for the timer that is being started.</param>
+            <param name="timerCategoryName">A category describing a collection of related timings.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.TimeStop(System.String)">
+            <summary>
+            <para> TimeStop will take a corresponding TimeStart entry and record the difference in milliseconds between the TimeStart and
+            TimeStop method calls.  The results of this along with the start and stop times will then be written to the debugging stream.</para>
+            <para> The TimeStop method requires that it is called with a timerTitle parameter that matches exactly a timerTitle that has
+            already been passed to a TimeStart method call. timerTitles are case sensitive and must be specified exactly.
+            </para><para>
+            This is not a highly effective or accurate profilling mechanism but will suffice for quick timings.
+            </para>
+            </summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method has a Trace level of Verbose.</para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">Thrown when timerTitle is null or a zero length string.</exception>
+            <param name="timerTitle">The unique title for the timer that is being started.</param>
+        </member>
+        <member name="M:LBG.Insurance.Developer.Diagnostics.Tex.TimeStop(System.String,System.String)">
+            <summary>
+            <para> TimeStop will take a corresponding TimeStart entry and record the difference in milliseconds between the TimeStart and
+            TimeStop method calls.  The results of this along with the start and stop times will then be written to the debugging stream.</para>
+            <para> The TimeStop method requires that it is called with a timerTitle parameter that matches exactly a timerTitle that has
+            already been passed to a TimeStart method call. timerTitles are case sensitive and must be specified exactly.
+            </para><para>
+            This is not a highly effective or accurate profilling mechanism but will suffice for quick timings.
+            </para>
+            </summary>
+            <remarks>
+            <para>This method is dependant on the TRACE preprosessing identifier.</para>
+            <para>This method has a Trace level of Verbose.</para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">Thrown when timerTitle is null or a zero length string.</exception>
+            <param name="timerTitle">The unique title for the timer that is being started.</param>
+            <param name="timerCategoryName">A category describing a collection of related timings.</param>
+        </member>
+        <member name="T:LBG.Insurance.Developer.Diagnostics.TraceCustomEventHandler">
+            <summary>
+            This delegate is designed to allow users to hook the trace streams.  It is used in the events.  
+            </summary>
+        </member>
+    </members>
+</doc>

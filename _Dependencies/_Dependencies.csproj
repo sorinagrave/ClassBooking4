@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{475A1118-8B8A-4767-94FC-677960127123}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>_Dependencies</RootNamespace>
+    <AssemblyName>_Dependencies</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FileReferences\Tex.dll" />
+    <Content Include="FileReferences\Tex.pdb" />
+    <Content Include="FileReferences\Tex.XML" />
+    <Content Include="SqlLiteDependencies\64bit\System.Data.SQLite.dll" />
+    <Content Include="SqlLiteDependencies\64bit\System.Data.SQLite.EF6.dll" />
+    <Content Include="SqlLiteDependencies\64bit\System.Data.SQLite.EF6.pdb" />
+    <Content Include="SqlLiteDependencies\64bit\System.Data.SQLite.EF6.xml" />
+    <Content Include="SqlLiteDependencies\64bit\System.Data.SQLite.Linq.dll" />
+    <Content Include="SqlLiteDependencies\64bit\System.Data.SQLite.Linq.pdb" />
+    <Content Include="SqlLiteDependencies\64bit\System.Data.SQLite.Linq.xml" />
+    <Content Include="SqlLiteDependencies\64bit\System.Data.SQLite.pdb" />
+    <Content Include="SqlLiteDependencies\64bit\System.Data.SQLite.xml" />
+    <Content Include="SqlLiteDependencies\msvcr100.dll" />
+    <Content Include="SqlLiteDependencies\x86\System.Data.SQLite.dll" />
+    <Content Include="SqlLiteDependencies\x86\System.Data.SQLite.EF6.dll" />
+    <Content Include="SqlLiteDependencies\x86\System.Data.SQLite.EF6.pdb" />
+    <Content Include="SqlLiteDependencies\x86\System.Data.SQLite.EF6.xml" />
+    <Content Include="SqlLiteDependencies\x86\System.Data.SQLite.Linq.dll" />
+    <Content Include="SqlLiteDependencies\x86\System.Data.SQLite.Linq.pdb" />
+    <Content Include="SqlLiteDependencies\x86\System.Data.SQLite.Linq.xml" />
+    <Content Include="SqlLiteDependencies\x86\System.Data.SQLite.pdb" />
+    <Content Include="SqlLiteDependencies\x86\System.Data.SQLite.xml" />
+    <Content Include="TexMex\CodeLib.dll" />
+    <Content Include="TexMex\Mex.exe" />
+    <Content Include="TexMex\Tex.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TexMex\Mex.exe.config" />
+    <None Include="TexMex\TexMexGettingStarted.url" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

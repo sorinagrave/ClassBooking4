@@ -1,0 +1,133 @@
+﻿@model ClassBooking.ViewModels.ClassDetail
+@using ClassBooking.Authorisation
+@{
+    ViewBag.Title = "Class details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Gym class details</h4>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.GymClassTypeName)
+        </dt>
+        <dd id="txtClassName">
+            @Html.DisplayFor(model => model.GymClassTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MaxCapacity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaxCapacity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MaxWaitList)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MaxWaitList)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.nBookings)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.nBookings)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ClassDate)
+        </dt>
+        <dd id="txtClassDateTime">
+            @Html.DisplayFor(model => model.ClassDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ClassTime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ClassTime)
+        </dd>
+    </dl>
+    <span>&nbsp;</span>
+    @if (User.IsMember() || User.IsAdmin())
+    {
+        <div class="col-md-6">
+        @if (Model.Bookings != null && Model.Bookings.Count > 0)
+        {
+            <h4>Booked on this class:</h4>
+            <table class="table" id="tblBookings">
+            
+            @if (User.IsAdmin())
+            {
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Email address
+                    </th>
+                </tr>
+            }
+                    
+            @foreach (var item in Model.Bookings)
+            {
+                var rowClass = item.Waiting ? "warning" : "";
+                <tr class="@rowClass">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GymMember.FirstName) 
+                        @Html.DisplayFor(modelItem => item.GymMember.LastName)                     
+                    </td>                 
+                        @if (User.IsAdmin())
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => item.GymMember.EmailAddress) 
+                            </td>
+                        }
+                </tr>
+            }
+            </table>
+        }
+        </div>
+    }
+    <div class="col-md-12">
+        <span>&nbsp;</span>
+            @if (User.IsAdmin())
+            {
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-info" })
+                <span>&nbsp;</span>
+                @Html.ActionLink("Edit", "Edit", new { id = Model.GymClassId }, new { @class = "btn btn-info" })
+                <span>&nbsp;</span>
+                if (Model.Bookings != null && Model.Bookings.Count > 0) {
+                    <input type="button" class="btn btn-info" value="Email attendees" onclick="onEmailAttendees();"/>
+                }
+            }
+            else
+            {
+                @Html.ActionLink("Back to List", "Index", "Home",null, new { @class = "btn btn-info" })
+            }
+    </div>
+</div>
+<script language="JavaScript">
+    function onEmailAttendees() {
+        var emails = "";
+        var theTbl = document.getElementById('tblBookings');
+        for (var i = 1; i < theTbl.rows.length; i++) {
+            var em = $.trim(theTbl.rows[i].cells[1].innerHTML);
+            emails = emails + em + ';';
+        }
+        var subject = $.trim($('#txtClassName')[0].innerHTML) + " on " + $.trim($('#txtClassDateTime')[0].innerHTML);
+        var link = "mailto:" + emails + "&subject=" + escape(subject);
+        window.location.href = link;
+    }
+</script>

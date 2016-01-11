@@ -1,0 +1,99 @@
+﻿@model ClassBooking.Models.GymMember
+
+@{
+    ViewBag.Title = "Member details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Gym Member Details</h4>
+<span>&nbsp;</span>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.StaffId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StaffId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailAddress)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsAdmin)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsAdmin)
+        </dd>
+    </dl>
+</div>
+@if (Model.Bookings != null && Model.Bookings.Count > 0) {
+    <div class="col-md-8">
+        <h4>Booked on classes:</h4>
+        <table class="table" id="tblBookings">
+            <tr class="info">
+                <th>
+                    Type
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Class Date
+                </th>
+            </tr>
+
+            @foreach (var item in Model.Bookings) {
+                var rowClass = item.Waiting ? "warning" : "";
+                <tr class="@rowClass">
+                    <td>
+                        <a href="@Url.Action("Details", "GymClass", new { id=item.GymClassId })">
+                            @Html.DisplayFor(modelItem => item.GymClass.Type.Name)
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GymClass.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GymClass.ClassDateTime)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+}
+<div class="col-md-12">
+        @Html.ActionLink("Edit", "Edit", new { id = Model.GymMemberId }, new { @class = "btn btn-info" })
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-info" })
+</div>

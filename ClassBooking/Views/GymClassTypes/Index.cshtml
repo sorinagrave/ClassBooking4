@@ -1,0 +1,65 @@
+﻿@using ClassBooking.Authorisation
+@model IEnumerable<ClassBooking.Models.GymClassType>
+
+@{
+    ViewBag.Title = "Class types";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="col-md-10">
+    <h4>Class Types</h4>
+    <span>&nbsp;</span>
+    @if (User.IsAdmin()) {
+        <p>
+            @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-info" })
+        </p>
+    }
+    <table class="table table-striped">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DayOfTheWeek)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClassTime)
+            </th>
+            <th></th>
+        </tr>
+        @{DayOfWeek lastDay = DayOfWeek.Sunday ;}
+        @foreach (var item in Model) {
+            <tr>
+                @if (!item.DayOfTheWeek.Equals(lastDay)) {
+                    lastDay = item.DayOfTheWeek;
+                    <td class="info">
+                        @Html.DisplayFor(modelItem => item.DayOfTheWeek)
+                    </td>
+                } else {
+                    <td class="info"></td>
+                }
+                <td>
+                    <a href="@Url.Action("Details", new { id=item.GymClassTypeId })">
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClassTime)
+                </td>
+                <td>
+                    @if (User.IsAdmin()) {
+                        @Html.ActionLink("Edit", "Edit", new { id = item.GymClassTypeId }, new { @class = "btn btn-info" })
+                        <span> </span>
+                        <a data-toggle="modal" data-target="#deleteModal" data-deleteid="@item.GymClassTypeId" data-displaytext="@item.Name" class="btn btn-danger">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+@Html.Partial("_DeleteConfirm")

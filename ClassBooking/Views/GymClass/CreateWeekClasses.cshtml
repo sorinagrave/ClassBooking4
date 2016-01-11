@@ -1,0 +1,77 @@
+﻿@model ClassBooking.ViewModels.WeekGymClass
+
+@{
+    ViewBag.Title = "CreateWeekClasses";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Add weekly classes</h4>
+<span>&nbsp;</span>
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+
+    <div class="form-inline">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-inline col-md-8">
+            <label class="control-label">Please select a week start date:</label>
+            @Html.DropDownListFor(model => model.SelectedWeek,
+            new SelectList(Model.FutureWeeks,"Value","Text",Model.SelectedWeek),
+            "-- select week --",
+            new { @class = "form-control", onchange = "onWeekSelected()", @id = "txtWeek" })
+            <input type="submit" value="Create" class="btn btn-info" />       
+        </div>    
+        <div class="col-md-8">
+            <span>&nbsp;</span>
+            <table class="table table-striped">
+                <tr class="info">
+                    <th>
+                        Add ?
+                    </th>
+                    <th>
+                        Class
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Time
+                    </th>
+                </tr>
+                @for (int i = 0; i < Model.WeekClasses.Count; i++) {
+                    <tr>
+                        <td>
+                            @Html.CheckBoxFor(modelItem => Model.WeekClasses[i].IsEditable)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.WeekClasses[i].GymClassTypeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.WeekClasses[i].ClassDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.WeekClasses[i].ClassTime)
+                            @Html.HiddenFor(modelItem => Model.WeekClasses[i].ClassTime)
+                            @Html.HiddenFor(modelItem => Model.WeekClasses[i].ClassDateTime)
+                            @Html.HiddenFor(modelItem => Model.WeekClasses[i].GymClassTypeId)
+                            @Html.HiddenFor(modelItem => Model.WeekClasses[i].Description)
+                            @Html.HiddenFor(modelItem => Model.WeekClasses[i].MaxWaitList)
+                            @Html.HiddenFor(modelItem => Model.WeekClasses[i].MaxCapacity)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+   </div>
+}
+
+<script language="JavaScript">
+    function onWeekSelected() {
+        jQuery.support.cors = true;
+        var id = $('#txtWeek').val();
+        if (id > -1) {
+            var path = '@Url.Action("CreateWeekClasses")';
+            window.location.href = path + '?nWeek=' + id;
+        }
+    }
+</script>

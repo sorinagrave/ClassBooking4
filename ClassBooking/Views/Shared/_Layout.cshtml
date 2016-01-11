@@ -1,0 +1,56 @@
+﻿@using ClassBooking.Authorisation
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>@ViewBag.Title - Class Booking</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Class booking", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                @if (User.IsAdmin())
+                {
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Class Types", "Index", "GymClassTypes")</li>
+                    </ul>
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Classes", "Index", "GymClass")</li>
+                    </ul>
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Report", "Report", "GymClass")</li>
+                    </ul>
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Members", "Index", "GymMember")</li>
+                    </ul>
+                }
+                <p class="nav navbar-text navbar-right">Hello @User.GetMemberName()</p>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        <hr/>
+        @RenderBody()
+    </div>
+    <footer class="container body-content">
+        <hr/>
+        <p>&copy; @DateTime.Now.Year - LBG</p>
+    </footer>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

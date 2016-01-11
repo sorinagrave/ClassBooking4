@@ -1,0 +1,90 @@
+﻿@model ClassBooking.ViewModels.ClassReport
+
+@{
+    ViewBag.Title = "Bookings report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>Run class report</h4>
+<span>&nbsp;</span>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <hr />
+        <div class="form-horizontal">
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ClassDateFrom, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.ClassDateFrom, new { @class = "form-control", @id = "txtClassDate" })
+                    @Html.ValidationMessageFor(model => model.ClassDateFrom, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ClassDateTo, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.ClassDateTo, new { @class = "form-control", @id = "txtClassDate" })
+                    @Html.ValidationMessageFor(model => model.ClassDateTo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            @if (!String.IsNullOrEmpty(Model.ClassDateFrom) && !String.IsNullOrEmpty(Model.ClassDateTo))
+            {
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.TotalAttended)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.TotalAttended)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.TotalBookings)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.TotalBookings)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.TotalWaitingList)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.TotalWaitingList)
+                    </dd>
+                </dl>
+                if (Model.NoShowMembers != null) {
+                    <div class="col-md-6">
+                        <table class="table" id="tblNoShows">
+                            <tr class="info">
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Number of No Shows
+                                </th>
+                            </tr>
+
+                            @foreach (var item in Model.NoShowMembers) {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Member.FirstName)
+                                        @Html.DisplayFor(modelItem => item.Member.LastName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NoShows)
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                }
+            }
+            <span>&nbsp;</span>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <input type="submit" value="Run Report" class="btn btn-info" />
+                    <span>&nbsp;</span>
+                    @if (!String.IsNullOrEmpty(Model.ClassDateFrom) && !String.IsNullOrEmpty(Model.ClassDateTo)) {
+                        @Html.ActionLink("Delete all classes and bookings in this period", "DeleteRange", new { classDateFrom = Model.ClassDateFrom, classDateTo = Model.ClassDateTo }, new { @class = "btn btn-danger" })
+                    }
+                </div>
+            </div>
+        </div>
+}
