@@ -1,11 +1,9 @@
 ﻿
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ClassBooking.Models
-{
+namespace ClassBooking.Models {
     [Table("GymClassBooking")]
-    public class GymClassBooking
-    {
+    public class GymClassBooking {
         public int GymClassBookingId { get; set; }
         public int GymClassId { get; set; }
         public int GymMemberId { get; set; }

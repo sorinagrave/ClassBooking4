@@ -136,11 +136,16 @@ namespace ClassBooking.Controllers {
             if (booking == null) {
                 return false;
             }
-            var waitingBooking = db.MemberClassBookings.Where(bk => bk.GymClassId == cl.GymClassId && bk.Waiting == true).FirstOrDefault();
             db.Entry(booking).State = EntityState.Deleted;
-            if (waitingBooking != null) {
-                waitingBooking.Waiting = false;
-                db.Entry(waitingBooking).State = EntityState.Modified;
+            var nBookings = db.MemberClassBookings.Where(cls => cls.GymClassId == classId && !cls.Waiting).Count();
+            // Promote the next one from the waiting list
+            GymClassBooking promotedBooking = null;
+            if (!booking.Waiting && nBookings <= cl.MaxCapacity){
+                promotedBooking = db.MemberClassBookings.Where(bk => bk.GymClassId == cl.GymClassId && bk.Waiting == true).FirstOrDefault();
+            }       
+            if (promotedBooking != null) {
+                promotedBooking.Waiting = false;
+                db.Entry(promotedBooking).State = EntityState.Modified;
             }
             db.SaveChanges();
             return true;

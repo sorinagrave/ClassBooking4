@@ -82,5 +82,5 @@ C:\dev\ClassBooking4\ClassBooking\bin\Tex.pdb
 C:\dev\ClassBooking4\ClassBooking\bin\Tex.xml
 C:\dev\ClassBooking4\ClassBooking\obj\Debug\ClassBooking.dll
 C:\dev\ClassBooking4\ClassBooking\obj\Debug\ClassBooking.pdb
-C:\dev\ClassBooking4\ClassBooking\bin\System.Data.SQLite.dll
 C:\dev\ClassBooking4\ClassBooking\obj\Debug\ClassBooking.csprojResolveAssemblyReference.cache
+C:\dev\ClassBooking4\ClassBooking\bin\System.Data.SQLite.dll

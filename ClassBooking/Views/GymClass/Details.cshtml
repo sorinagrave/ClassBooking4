@@ -1,14 +1,12 @@
-﻿@model ClassBooking.ViewModels.ClassDetail
+﻿@model ClassBooking.ViewModels.ClassBookingDetail
 @using ClassBooking.Authorisation
 @{
     ViewBag.Title = "Class details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h4>Gym class details</h4>
-
-<div>
-    <hr />
+<div class="col-md-4">
+    <h4 class="col-lg-offset-2">Class details</h4>
+    <span>&nbsp;</span>
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.GymClassTypeName)
@@ -60,17 +58,18 @@
         </dd>
     </dl>
     <span>&nbsp;</span>
+    </div>
     @if (User.IsMember() || User.IsAdmin())
     {
-        <div class="col-md-6">
-        @if (Model.Bookings != null && Model.Bookings.Count > 0)
+        <div class="col-md-4">
+        @if (Model.ClassBookings != null && Model.ClassBookings.Count > 0)
         {
-            <h4>Booked on this class:</h4>
-            <table class="table" id="tblBookings">
+            <h4>Booked</h4>
+            <table class="table table-condensed" id="tblBookings">
             
             @if (User.IsAdmin())
             {
-                <tr>
+                <tr class="info">
                     <th>
                         Name
                     </th>
@@ -80,10 +79,9 @@
                 </tr>
             }
                     
-            @foreach (var item in Model.Bookings)
+            @foreach (var item in Model.ClassBookings)
             {
-                var rowClass = item.Waiting ? "warning" : "";
-                <tr class="@rowClass">
+                <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.GymMember.FirstName) 
                         @Html.DisplayFor(modelItem => item.GymMember.LastName)                     
@@ -99,6 +97,38 @@
             </table>
         }
         </div>
+        <div class="col-md-4">
+            @if (Model.ClassWaiting != null && Model.ClassWaiting.Count > 0) {
+                <h4>Waiting list</h4>
+                <table class="table table-condensed" id="tblWaiting">
+
+                    @if (User.IsAdmin()) {
+                        <tr class="info">
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Email address
+                            </th>
+                        </tr>
+                    }
+
+                    @foreach (var item in Model.ClassWaiting) {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.GymMember.FirstName)
+                                @Html.DisplayFor(modelItem => item.GymMember.LastName)
+                            </td>
+                            @if (User.IsAdmin()) {
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.GymMember.EmailAddress)
+                                </td>
+                            }
+                        </tr>
+                    }
+                </table>
+            }
+        </div>
     }
     <div class="col-md-12">
         <span>&nbsp;</span>
@@ -108,7 +138,7 @@
                 <span>&nbsp;</span>
                 @Html.ActionLink("Edit", "Edit", new { id = Model.GymClassId }, new { @class = "btn btn-info" })
                 <span>&nbsp;</span>
-                if (Model.Bookings != null && Model.Bookings.Count > 0) {
+                if (Model.ClassBookings != null && Model.ClassBookings.Count > 0) {
                     <input type="button" class="btn btn-info" value="Email attendees" onclick="onEmailAttendees();"/>
                 }
             }
@@ -117,7 +147,6 @@
                 @Html.ActionLink("Back to List", "Index", "Home",null, new { @class = "btn btn-info" })
             }
     </div>
-</div>
 <script language="JavaScript">
     function onEmailAttendees() {
         var emails = "";
@@ -126,8 +155,14 @@
             var em = $.trim(theTbl.rows[i].cells[1].innerHTML);
             emails = emails + em + ';';
         }
+        var theWait = document.getElementById('tblWaiting');
+        var emailscc = "";
+        for (var i = 1; i < theWait.rows.length; i++) {
+            var em = $.trim(theWait.rows[i].cells[1].innerHTML);
+            emailscc = emailscc + em + ';';
+        }
         var subject = $.trim($('#txtClassName')[0].innerHTML) + " on " + $.trim($('#txtClassDateTime')[0].innerHTML);
-        var link = "mailto:" + emails + "&subject=" + escape(subject);
+        var link = "mailto:" + emails + "?subject=" + escape(subject) + "&cc=" + emailscc;
         window.location.href = link;
     }
 </script>

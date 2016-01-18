@@ -60,6 +60,7 @@
 </div>
 @if (Model.Bookings != null && Model.Bookings.Count > 0) {
     <div class="col-md-8">
+        <hr/>
         <h4>Booked on classes:</h4>
         <table class="table" id="tblBookings">
             <tr class="info">
@@ -72,6 +73,9 @@
                 <th>
                     Class Date
                 </th>
+                <th>
+                    Class Time
+                </th>
             </tr>
 
             @foreach (var item in Model.Bookings) {
@@ -79,14 +83,17 @@
                 <tr class="@rowClass">
                     <td>
                         <a href="@Url.Action("Details", "GymClass", new { id=item.GymClassId })">
-                            @Html.DisplayFor(modelItem => item.GymClass.Type.Name)
+                            @item.GymClass.Type.Name
                         </a>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.GymClass.Description)
+                        @item.GymClass.Description
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.GymClass.ClassDateTime)
+                        @item.GymClass.ClassDateTime.ToString("dddd dd MMM")
+                    </td>
+                    <td>
+                        @item.GymClass.ClassDateTime.ToString("HH:mm")
                     </td>
                 </tr>
             }

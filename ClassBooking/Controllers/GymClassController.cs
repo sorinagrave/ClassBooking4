@@ -76,7 +76,7 @@ namespace ClassBooking.Controllers {
             if (id == null) {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ClassDetail gymClass = db.GymClass.Find(id).ToViewModel(true);
+            ClassBookingDetail gymClass = db.GymClass.Find(id).ToBookingViewModel(true);
             if (gymClass == null) {
                 return HttpNotFound();
             }
@@ -112,7 +112,7 @@ namespace ClassBooking.Controllers {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             GymClass dbClass = db.GymClass.Find(id);
-            ClassDetail gymClass = dbClass.ToViewModel(false);
+            ClassBookingDetail gymClass = dbClass.ToBookingViewModel(false);
             if (gymClass == null) {
                 return HttpNotFound();
             }
@@ -126,7 +126,7 @@ namespace ClassBooking.Controllers {
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ClassBookingAuthorise(Level = AuthorisationLevel.Administrator)]
-        public ActionResult Edit([Bind(Include = "GymClassId,Description,GymClassTypeId,ClassTime,ClassDate,MaxCapacity,MaxWaitList,Bookings")] ClassDetail gymClass) {
+        public ActionResult Edit([Bind(Include = "GymClassId,Description,GymClassTypeId,ClassTime,ClassDate,MaxCapacity,MaxWaitList,ClassBookings,ClassWaiting")] ClassBookingDetail gymClass) {
             Tex.Log("Enter GymClassController/Edit");
             try {
                 if (ModelState.IsValid) {
@@ -137,8 +137,13 @@ namespace ClassBooking.Controllers {
                     GymClassMapper.CopyGymClass(gymClass.ToModel(), dbClass);                 
                     db.Entry(dbClass).State = EntityState.Modified;
 
-                    if (gymClass.Bookings != null && gymClass.Bookings.Any()) {
-                        foreach (var booking in gymClass.Bookings) {
+                    if (gymClass.ClassBookings != null && gymClass.ClassBookings.Any()) {
+                        foreach (var booking in gymClass.ClassBookings) {
+                            db.Entry(booking).State = EntityState.Modified;
+                        }
+                    }
+                    if (gymClass.ClassWaiting != null && gymClass.ClassWaiting.Any()){
+                        foreach (var booking in gymClass.ClassWaiting) {
                             db.Entry(booking).State = EntityState.Modified;
                         }
                     }

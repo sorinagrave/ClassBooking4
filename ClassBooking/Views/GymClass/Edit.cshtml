@@ -1,4 +1,4 @@
-﻿@model ClassBooking.ViewModels.ClassDetail
+﻿@model ClassBooking.ViewModels.ClassBookingDetail
 
 @{
     ViewBag.Title = "Edit class";
@@ -70,57 +70,92 @@
                 </div>
             </div>
         </div>
-        </div>
-    if (Model.Bookings != null && Model.Bookings.Any())
-    {
-        <div class="col-md-6">
-            <table class="table">
+    </div>
+    <div class="col-md-3">
+        @if (Model.ClassBookings != null && Model.ClassBookings.Any()) {
+            <label>Booked</label>
+            <table class="table table-condensed">
                 <tr class="info">
                     <th>
                         Name
                     </th>
-                    @if (Model.IsEditable)
-                    {
+                    @if (Model.IsEditable) {
                         <th>
                             Attended
                         </th>
-                    }
-                    else
-                    {
+                    } else {
                         <th>
                             Option
                         </th>
                     }
                 </tr>
-                @for (int i = 0; i < Model.Bookings.Count; i++)
-                {
-                    var rowClass = Model.Bookings[i].Waiting ? "warning" : "";
-                    <tr class="@rowClass">
+                @for (int i = 0; i < Model.ClassBookings.Count; i++) {
+                    <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => Model.Bookings[i].GymMember.FirstName) 
-                            @Html.DisplayFor(modelItem => Model.Bookings[i].GymMember.LastName)                          
+                            @Html.DisplayFor(modelItem => Model.ClassBookings[i].GymMember.FirstName)
+                            @Html.DisplayFor(modelItem => Model.ClassBookings[i].GymMember.LastName)
                         </td>
-                        @if(Model.IsEditable)
-                        {
-                        <td>
-                            @Html.CheckBoxFor(modelItem => Model.Bookings[i].Attended)
-                            @Html.HiddenFor(modelItem => Model.Bookings[i].GymClassBookingId)
-                            @Html.HiddenFor(modelItem => Model.Bookings[i].GymClassId)
-                            @Html.HiddenFor(modelItem => Model.Bookings[i].GymMemberId)
-                            @Html.HiddenFor(modelItem => Model.Bookings[i].Waiting)
-                        </td>
-                        }
-                        else
-                        {
-                        <td>
-                            @Html.ActionLink("Cancel", "CancelBooking", new { classId = Model.GymClassId, memberId = Model.Bookings[i].GymMemberId }, new { @class = "btn btn-danger" })
-                        </td>
+                        @if (Model.IsEditable) {
+                            <td>
+                                @Html.CheckBoxFor(modelItem => Model.ClassBookings[i].Attended)
+                                @Html.HiddenFor(modelItem => Model.ClassBookings[i].GymClassBookingId)
+                                @Html.HiddenFor(modelItem => Model.ClassBookings[i].GymClassId)
+                                @Html.HiddenFor(modelItem => Model.ClassBookings[i].GymMemberId)
+                                @Html.HiddenFor(modelItem => Model.ClassBookings[i].Waiting)
+                            </td>
+                        } else {
+                            <td>
+                                @Html.ActionLink("Cancel", "CancelBooking", new { classId = Model.GymClassId, memberId = Model.ClassBookings[i].GymMemberId }, new { @class = "btn btn-danger" })
+                            </td>
                         }
                     </tr>
                 }
             </table>
+        }
         </div>
-    }
+        <div class="col-md-3">
+        @if (Model.ClassWaiting != null && Model.ClassWaiting.Any()) {
+            <label>Waiting list</label>
+            <table class="table table-condensed">
+                <tr class="info">
+                    <th>
+                        Name
+                    </th>
+                    @if (Model.IsEditable) {
+                        <th>
+                            Attended
+                        </th>
+                    } else {
+                        <th>
+                            Option
+                        </th>
+                    }
+                </tr>
+                @for (int i = 0; i < Model.ClassWaiting.Count; i++) {                
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.ClassWaiting[i].GymMember.FirstName)
+                            @Html.DisplayFor(modelItem => Model.ClassWaiting[i].GymMember.LastName)
+                        </td>
+                        @if (Model.IsEditable) {
+                            <td>
+                                @Html.CheckBoxFor(modelItem => Model.ClassWaiting[i].Attended)
+                                @Html.HiddenFor(modelItem => Model.ClassWaiting[i].GymClassBookingId)
+                                @Html.HiddenFor(modelItem => Model.ClassWaiting[i].GymClassId)
+                                @Html.HiddenFor(modelItem => Model.ClassWaiting[i].GymMemberId)
+                                @Html.HiddenFor(modelItem => Model.ClassWaiting[i].Waiting)
+                            </td>
+                        } else {
+                            <td>
+                                @Html.ActionLink("Cancel Waiting", "CancelBooking", new { classId = Model.GymClassId, memberId = Model.ClassWaiting[i].GymMemberId }, new { @class = "btn btn-danger" })
+                            </td>
+                        }
+                    </tr>
+                }
+            </table>
+        }
+
+    </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-info" })

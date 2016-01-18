@@ -1,10 +1,8 @@
-﻿using ClassBooking.Database;
-using ClassBooking.ViewModels;
+﻿using ClassBooking.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
 using System.Linq;
 
 namespace ClassBooking.Models {
@@ -58,11 +56,39 @@ namespace ClassBooking.Models {
                 cd.ClassDate = gymClass.ClassDateTime.ToString("dd/MM/yyyy");
             }
             cd.IsEditable = gymClass.ClassDateTime < DateTime.Now;
-            cd.Bookings = new List<GymClassBooking>();
-            foreach (var b in gymClass.Bookings.OrderBy(bk => bk.GymMember.LastName).ToList()) {
-                cd.Bookings.Add(b);
+            cd.nBookings = gymClass.Bookings.Count();
+            return cd;
+        }
+        public static ClassBookingDetail ToBookingViewModel(this GymClass gymClass, bool isDisplayDateFormat) {
+            ClassBookingDetail cd = new ClassBookingDetail();
+            if (gymClass == null) {
+                return cd;
             }
-            cd.nBookings = cd.Bookings.Count();
+            cd.Description = gymClass.Description;
+            cd.GymClassId = gymClass.GymClassId;
+            cd.MaxCapacity = gymClass.MaxCapacity;
+            cd.MaxWaitList = gymClass.MaxWaitList;
+            cd.GymClassTypeId = gymClass.GymClassTypeId;
+            cd.GymClassTypeName = gymClass.Type.Name;
+            cd.ClassDateTime = gymClass.ClassDateTime;
+
+            if (isDisplayDateFormat) {
+                cd.ClassDate = gymClass.ClassDateTime.ToString("dddd dd MMM");
+                cd.ClassTime = gymClass.ClassDateTime.ToString("HH:mm");
+            } else {
+                cd.ClassTime = gymClass.ClassDateTime.ToString("HH:mm");
+                cd.ClassDate = gymClass.ClassDateTime.ToString("dd/MM/yyyy");
+            }
+            cd.IsEditable = gymClass.ClassDateTime < DateTime.Now;
+            cd.ClassBookings = new List<GymClassBooking>();
+            foreach (var b in gymClass.Bookings.Where(bk => bk.Waiting == false).ToList()) {
+                cd.ClassBookings.Add(b);
+            }
+            cd.ClassWaiting = new List<GymClassBooking>();
+            foreach (var b in gymClass.Bookings.Where(bk => bk.Waiting == true).ToList()) {
+                cd.ClassWaiting.Add(b);
+            }
+            cd.nBookings = gymClass.Bookings.Count();
             return cd;
         }
     }
