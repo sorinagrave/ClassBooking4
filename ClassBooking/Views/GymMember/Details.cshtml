@@ -68,32 +68,37 @@
                     Type
                 </th>
                 <th>
-                    Description
-                </th>
-                <th>
                     Class Date
                 </th>
                 <th>
                     Class Time
                 </th>
+                <th>
+                    On the wait list?
+                </th>
+                <th>
+                    Attended?
+                </th>
             </tr>
 
             @foreach (var item in Model.Bookings) {
-                var rowClass = item.Waiting ? "warning" : "";
-                <tr class="@rowClass">
+                <tr>
                     <td>
                         <a href="@Url.Action("Details", "GymClass", new { id=item.GymClassId })">
                             @item.GymClass.Type.Name
                         </a>
                     </td>
                     <td>
-                        @item.GymClass.Description
-                    </td>
-                    <td>
                         @item.GymClass.ClassDateTime.ToString("dddd dd MMM")
                     </td>
                     <td>
                         @item.GymClass.ClassDateTime.ToString("HH:mm")
+                    </td>
+                    <td>
+                        @(item.Waiting?"YES":"")
+                    </td>
+                    <td>
+                        @(item.Attended ? "YES" : "")
                     </td>
                 </tr>
             }
