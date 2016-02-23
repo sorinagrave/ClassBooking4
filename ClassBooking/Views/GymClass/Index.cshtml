@@ -4,12 +4,13 @@
 @{
     ViewBag.Title = "Classes";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    bool uia = User.IsAdmin();
 }
 <div class="col-md-10">
     <h4>Classes</h4>
     <span>&nbsp;</span>
     <p>
-        @if (User.IsAdmin()) {
+        @if (uia) {
             @Html.ActionLink("Create New Class", "Create", "GymClass", null, new { @class = "btn btn-info" })
             <span> </span>
             @Html.ActionLink("Create Week Classes", "CreateWeekClasses", "GymClass", null, new { @class = "btn btn-info" })
@@ -60,7 +61,7 @@
                     @Html.DisplayFor(modelItem => item.nBookings)
                 </td>
                 <td>
-                    @if (User.IsAdmin()) {
+                    @if (uia) {
                         @Html.ActionLink("Edit", "Edit", new { id = item.GymClassId }, new { @class = "btn btn-info" })
                         <a data-toggle="modal" data-target="#deleteModal" data-deleteid="@item.GymClassId" data-displaytext="@item.Description" class="btn btn-danger">Delete</a>
                     }

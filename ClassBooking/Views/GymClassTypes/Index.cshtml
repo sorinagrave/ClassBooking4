@@ -4,11 +4,12 @@
 @{
     ViewBag.Title = "Class types";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    bool uia=User.IsAdmin();
 }
 <div class="col-md-10">
     <h4>Class Types</h4>
     <span>&nbsp;</span>
-    @if (User.IsAdmin()) {
+    @if (uia) {
         <p>
             @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-info" })
         </p>
@@ -52,7 +53,7 @@
                     @Html.DisplayFor(modelItem => item.ClassTime)
                 </td>
                 <td>
-                    @if (User.IsAdmin()) {
+                    @if (uia) {
                         @Html.ActionLink("Edit", "Edit", new { id = item.GymClassTypeId }, new { @class = "btn btn-info" })
                         <span> </span>
                         <a data-toggle="modal" data-target="#deleteModal" data-deleteid="@item.GymClassTypeId" data-displaytext="@item.Name" class="btn btn-danger">Delete</a>

@@ -73,6 +73,8 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="LiveData\15_Feb_LiveDataCut.sqlite" />
+    <None Include="LiveData\23_Feb_LiveDataCut.sqlite" />
     <None Include="TexMex\Mex.exe.config" />
     <None Include="TexMex\TexMexGettingStarted.url" />
   </ItemGroup>

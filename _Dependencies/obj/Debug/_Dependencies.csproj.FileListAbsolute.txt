@@ -6,3 +6,8 @@ C:\dev\ClassBooking4\_Dependencies\bin\Debug\_Dependencies.dll
 C:\dev\ClassBooking4\_Dependencies\bin\Debug\_Dependencies.pdb
 C:\dev\ClassBooking4\_Dependencies\obj\Debug\_Dependencies.dll
 C:\dev\ClassBooking4\_Dependencies\obj\Debug\_Dependencies.pdb
+C:\Files\Code\ghub\ClassBooking\_Dependencies\bin\Debug\_Dependencies.dll
+C:\Files\Code\ghub\ClassBooking\_Dependencies\bin\Debug\_Dependencies.pdb
+C:\Files\Code\ghub\ClassBooking\_Dependencies\obj\Debug\_Dependencies.csprojResolveAssemblyReference.cache
+C:\Files\Code\ghub\ClassBooking\_Dependencies\obj\Debug\_Dependencies.dll
+C:\Files\Code\ghub\ClassBooking\_Dependencies\obj\Debug\_Dependencies.pdb

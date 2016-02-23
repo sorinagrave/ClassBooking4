@@ -21,7 +21,7 @@ namespace ClassBooking.Controllers {
             try {
                 MemberBookings gmb = new MemberBookings();
                 DateTime oneHourFromNow = DateTime.Now.AddHours(1);
-                var allFutureClasses = db.GymClass.Where(cl => cl.ClassDateTime > oneHourFromNow).OrderBy(bk => bk.ClassDateTime).ToList();
+                var allFutureClasses = db.GymClass.Where(cl => cl.ClassDateTime > DateTime.Now).OrderBy(bk => bk.ClassDateTime).ToList();
                 GymMember gm;
                 if (memberId == 0) {
                     gm = GetCurrentGymMember();
@@ -45,6 +45,7 @@ namespace ClassBooking.Controllers {
                             }
                         }
                     }
+                    bookableClass.IsLessThanAnHourAway = bookableClass.ClassDateTime <= oneHourFromNow;
                     allBookableClasses.Add(bookableClass);
                 }
 

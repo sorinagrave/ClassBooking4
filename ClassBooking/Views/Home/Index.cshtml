@@ -4,11 +4,14 @@
 @{
     ViewBag.Title = "Home";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    bool uim = User.IsMember();
+    bool uia = User.IsAdmin();
+
 }
 
 <div class="col-md-10">
     @if (Model.GymClasses != null && Model.GymClasses.Count > 0) {
-        if (User.IsAdmin()) {
+        if (uia) {
             <div class="form-group">
                 <p class="control-label col-md-2">Book a member:</p>
                 <div class="col-md-10">
@@ -35,7 +38,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.GymClasses[0].nBookings)
                 </th>
-                @if (User.IsAdmin() || User.IsMember()) {
+                @if (uia || uim) {
                     <th>
                         Option
                     </th>
@@ -55,7 +58,7 @@
                 <tr>
                     <td></td>
                     <td>
-                        <a href="@Url.Action("Details", "GymClass", new { id = item.GymClassId })">
+                    <a href="@Url.Action("Details", "GymClass" , new { id=item.GymClassId })">
                             @Html.DisplayFor(modelItem => item.GymClassTypeName)
                         </a>
                     </td>
@@ -68,9 +71,8 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.nBookings)
                     </td>
-                    @if (User.IsAdmin()) {
+                @if (uia) {
                         <td>
-
                             @if (item.MemberStatus == ClassBooking.ViewModels.MemberClassStatus.BookedClass) {
                                 @Html.ActionLink("Cancel", "CancelMember", new { classId = item.GymClassId, memberId = Model.CurrentMember.GymMemberId }, new { @class = "btn btn-danger" })
                             }
@@ -84,21 +86,38 @@
                                 @Html.ActionLink("Book Waiting", "BookMember", new { classId = item.GymClassId, memberId = Model.CurrentMember.GymMemberId }, new { @class = "btn btn-info" })
                             }
                         </td>
-                    } else if (User.IsMember()) {
+                } else if (uim) {                
                         <td>
                             @if (item.MemberStatus == ClassBooking.ViewModels.MemberClassStatus.BookedClass) {
+                      if(item.IsLessThanAnHourAway) {
+                           <p>Booked.</p>
+                      } else {
                                 @Html.ActionLink("Cancel", "Cancel", new { classId = item.GymClassId }, new { @class = "btn btn-danger" })
                             }
+                    }
                             @if (item.MemberStatus == ClassBooking.ViewModels.MemberClassStatus.BookedWaiting) {
+                    if(item.IsLessThanAnHourAway) {
+                    <p>Booked - Waiting.</p>
+                    } else {
                                 @Html.ActionLink("Cancel Waiting", "Cancel", new { classId = item.GymClassId }, new { @class = "btn btn-danger" })
                             }
+                    }
                             @if (item.MemberStatus == ClassBooking.ViewModels.MemberClassStatus.EligibleClass) {
+                    if(item.IsLessThanAnHourAway) {
+                    <p>Not Booked.</p>
+                    } else {
                                 @Html.ActionLink("Book", "Book", new { classId = item.GymClassId }, new { @class = "btn btn-info" })
                             }
+                    }
                             @if (item.MemberStatus == ClassBooking.ViewModels.MemberClassStatus.EligibleWaiting) {
+                    if(item.IsLessThanAnHourAway) {
+                    <p>Not Booked.</p>
+                    } else {
                                 @Html.ActionLink("Book Waiting", "Book", new { classId = item.GymClassId }, new { @class = "btn btn-info" })
                             }
+                    }
                         </td>
+                 
                     }
                 </tr>
             }

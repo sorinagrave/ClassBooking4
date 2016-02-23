@@ -15,7 +15,7 @@ namespace ClassBooking
         {
             Tex.Initialise("ClassBooking");
             Tex.AddTCPListener("10.66.97.67", "9060", false, "Jim");
-            Tex.AddTCPListener("10.203.116.79", "9060", false, "Sorina");
+            
             Tex.Log("App Online CB");
             AreaRegistration.RegisterAllAreas();
 

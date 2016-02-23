@@ -7,6 +7,9 @@ using System.Globalization;
 namespace ClassBooking.ViewModels {
     public class ClassDetail {
         public int GymClassId { get; set; }
+
+        public bool IsLessThanAnHourAway { get; set;  }
+
         [Required]
         [Display(Name = "Class Type")]
         public int GymClassTypeId { get; set; }
